@@ -7,4 +7,6 @@ flower.yaml
 
 ![Image alt](https://github.com/immortalserg/Flower-stancion/blob/main/20242081.png)
 
+flower2.yaml
 
+![Image alt](https://github.com/immortalserg/Flower-stancion/blob/main/20242085.png)
