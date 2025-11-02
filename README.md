@@ -4,6 +4,7 @@
 нет необходимости задавать mac адреса датчиков в прошивке, mac адреса задаются через web интерфейс
 
 flower.yaml
+
 ![Image alt](https://github.com/immortalserg/Flower-stancion/blob/main/20242081.png)
 
 
