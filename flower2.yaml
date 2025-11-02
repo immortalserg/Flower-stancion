@@ -1,0 +1,779 @@
+substitutions:
+  name: flower
+  fname: Flower
+  manufacture: Kusheev Sergei
+  device_description: "Flower systeme"
+  version: 1.0.0
+  gpio_relay1: GPIO16
+  gpio_relay2: GPIO17
+  gpio_relay3: GPIO26
+  gpio_relay4: GPIO27
+  fl1_mac: "FF:FF:FF:FF:FF:FF"
+  fl2_mac: "FF:FF:FF:FF:FF:FF"
+  fl3_mac: "FF:FF:FF:FF:FF:FF"
+  fl4_mac: "FF:FF:FF:FF:FF:FF"
+globals:
+  - id: flower1_mac
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 17
+    initial_value: '"FF:FF:FF:FF:FF:FF"'
+  - id: flower2_mac
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 17
+    initial_value: '"FF:FF:FF:FF:FF:FF"'
+  - id: flower3_mac
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 17
+    initial_value: '"FF:FF:FF:FF:FF:FF"'
+  - id: flower4_mac
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 17
+    initial_value: '"FF:FF:FF:FF:FF:FF"'
+  - id: flower_schedule
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 100
+    initial_value: '"08:00"'
+  - id: pump_run_time_1
+    type: int
+    restore_value: yes
+    initial_value: '10'
+  - id: pump_run_time_2
+    type: int
+    restore_value: yes
+    initial_value: '10'
+  - id: pump_run_time_3
+    type: int
+    restore_value: yes
+    initial_value: '10'
+  - id: pump_run_time_4
+    type: int
+    restore_value: yes
+    initial_value: '10'
+  - id: set_moisture_1
+    type: int
+    restore_value: yes
+    initial_value: '50'
+  - id: set_moisture_2
+    type: int
+    restore_value: yes
+    initial_value: '50'
+  - id: set_moisture_3
+    type: int
+    restore_value: yes
+    initial_value: '50'
+  - id: set_moisture_4
+    type: int
+    restore_value: yes
+    initial_value: '50'
+
+
+
+
+
+esphome:
+  name: ${name}
+  friendly_name: ${fname}
+  comment: ${device_description}
+  project:
+    name: "immortalserg.flover"
+    version: ${version}
+  on_boot:
+    priority: -10
+    then:
+      - lambda: |-
+          auto parse_mac = [](std::string mac) -> uint64_t {
+            uint64_t value = 0;
+            int byte_val;
+            for (int i = 0; i < 6; i++) {
+              sscanf(mac.c_str() + i * 3, "%2x", &byte_val);
+              value = (value << 8) | (byte_val & 0xFF);
+            }
+            return value;
+          };
+          ESP_LOGI("boot", "Применение MAC адресов из globals:");
+          id(fl1).set_address(parse_mac(id(flower1_mac).c_str()));
+          id(fl2).set_address(parse_mac(id(flower2_mac).c_str()));
+          id(fl3).set_address(parse_mac(id(flower3_mac).c_str()));
+          id(fl4).set_address(parse_mac(id(flower4_mac).c_str()));
+      - lambda: |-
+          id(pump_time_slider_1).publish_state(id(pump_run_time_1));
+          id(pump_time_slider_2).publish_state(id(pump_run_time_2));
+          id(pump_time_slider_3).publish_state(id(pump_run_time_3));
+          id(pump_time_slider_4).publish_state(id(pump_run_time_4));
+
+          id(set_moisture_slider_1).publish_state(id(set_moisture_1));
+          id(set_moisture_slider_2).publish_state(id(set_moisture_2));
+          id(set_moisture_slider_3).publish_state(id(set_moisture_3));
+          id(set_moisture_slider_4).publish_state(id(set_moisture_4));
+
+
+esp32:
+  board: esp32dev
+#  board: esp32-c3-devkitm-1
+  framework:
+    type: arduino
+
+
+# Enable logging
+logger:
+  level: INFO
+api:
+  reboot_timeout: 0s
+ota:
+  - platform: esphome
+    password: "b69751c0c1385709addd896571fc010e"
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "Flower"
+    password: "123456789"
+captive_portal:
+web_server:
+  port: 80
+  local: True  
+  version: 3
+#  log: False
+  sorting_groups:
+    - id: group1
+      name: "🌿 Flower1"
+      sorting_weight: 10
+    - id: group2
+      name: "🌿 Flower2"
+      sorting_weight: 20
+    - id: group3
+      name: "🌿 Flower3"
+      sorting_weight: 30
+    - id: group4
+      name: "🌿 Flower4"
+      sorting_weight: 40
+    - id: group5
+      name: "📊 Setting"
+      sorting_weight: 50
+    - id: group6
+      name: "📊 Sensor"
+      sorting_weight: 45
+  
+
+esp32_ble:
+  disable_bt_logs: true
+  connection_timeout: 20s 
+  max_connections: 4
+esp32_ble_tracker:
+# 5C:85:7E:13:D6:1F
+
+
+
+
+
+
+#bluetooth_proxy:
+#  active: true
+#  connection_slots: 4
+
+script:
+  - id: pump_on_zone_1
+    then:
+      - switch.turn_on: relay_1
+      - delay: !lambda 'return id(pump_run_time_1) * 1000;'
+      - switch.turn_off: relay_1
+      - lambda: |-
+          ESP_LOGI("pump", "Насос Зона 1 выключен по таймеру");
+
+  - id: pump_on_zone_2
+    then:
+      - switch.turn_on: relay_2
+      - delay: !lambda 'return id(pump_run_time_2) * 1000;'
+      - switch.turn_off: relay_2
+      - lambda: |-
+          ESP_LOGI("pump", "Насос Зона 2 выключен по таймеру");
+
+  - id: pump_on_zone_3
+    then:
+      - switch.turn_on: relay_3
+      - delay: !lambda 'return id(pump_run_time_3) * 1000;'
+      - switch.turn_off: relay_3
+      - lambda: |-
+          ESP_LOGI("pump", "Насос Зона 3 выключен по таймеру");
+
+  - id: pump_on_zone_4
+    then:
+      - switch.turn_on: relay_4
+      - delay: !lambda 'return id(pump_run_time_4) * 1000;'
+      - switch.turn_off: relay_4
+      - lambda: |-
+          ESP_LOGI("pump", "Насос Зона 4 выключен по таймеру");
+
+
+
+
+text:
+  - platform: template
+    name: "Flower1 MAC"
+    id: flower1_mac_text
+    mode: text
+    icon: mdi:bluetooth
+    lambda: |-
+      return id(flower1_mac);
+    set_action:
+      - lambda: |-
+          if (x.size() == 17) {
+            id(flower1_mac) = x;
+            ESP_LOGI("BLE", "Новый MAC Flower1: %s", x.c_str());
+          } else {
+            ESP_LOGW("BLE", "Некорректный MAC: %s", x.c_str());
+          }
+    web_server:
+      sorting_group_id: group5
+
+  - platform: template
+    name: "Flower2 MAC"
+    id: flower2_mac_text
+    mode: text
+    icon: mdi:bluetooth
+    lambda: |-
+      return id(flower2_mac);
+    set_action:
+      - lambda: |-
+          if (x.size() == 17) {
+            id(flower2_mac) = x;
+            ESP_LOGI("BLE", "Новый MAC Flower2: %s", x.c_str());
+          } else {
+            ESP_LOGW("BLE", "Некорректный MAC: %s", x.c_str());
+          }
+    web_server:
+      sorting_group_id: group5
+
+  - platform: template
+    name: "Flower3 MAC"
+    id: flower3_mac_text
+    mode: text
+    icon: mdi:bluetooth
+    lambda: |-
+      return id(flower3_mac);
+    set_action:
+      - lambda: |-
+          if (x.size() == 17) {
+            id(flower3_mac) = x;
+            ESP_LOGI("BLE", "Новый MAC Flower3: %s", x.c_str());
+          } else {
+            ESP_LOGW("BLE", "Некорректный MAC: %s", x.c_str());
+          }
+    web_server:
+      sorting_group_id: group5
+
+  - platform: template
+    name: "Flower4 MAC"
+    id: flower4_mac_text
+    mode: text
+    icon: mdi:bluetooth
+    lambda: |-
+      return id(flower4_mac);
+    set_action:
+      - lambda: |-
+          if (x.size() == 17) {
+            id(flower4_mac) = x;
+            ESP_LOGI("BLE", "Новый MAC Flower4: %s", x.c_str());
+          } else {
+            ESP_LOGW("BLE", "Некорректный MAC: %s", x.c_str());
+          }
+    web_server:
+      sorting_group_id: group5
+  - platform: template
+    name: "Расписание"
+    id: flower1_schedule_text
+    icon: "mdi:calendar-clock"
+    mode: text
+    lambda: |-
+      return id(flower_schedule);
+    update_interval: 60s
+    web_server:
+      sorting_group_id: group5
+    set_action:
+      then:
+        - lambda: |-
+            ESP_LOGI("schedule", "Новое расписание: %s", x.c_str());
+            id(flower_schedule) = x;
+
+number:
+  # Продолжительность полива для каждой зоны
+  - platform: template
+    name: "Flower1 Продолжительность полива"
+    id: pump_time_slider_1
+    optimistic: true
+    restore_value: true
+    min_value: 1
+    max_value: 60
+    step: 1
+    unit_of_measurement: "s"
+    icon: mdi:timer-outline
+    web_server:
+      sorting_group_id: group5
+    set_action:
+      - lambda: |-
+          id(pump_run_time_1) = x;
+          ESP_LOGI("pump", "Установлено время работы насоса Зона 1: %d секунд", (int)x);
+
+  - platform: template
+    name: "Flower2 Продолжительность полива"
+    id: pump_time_slider_2
+    optimistic: true
+    restore_value: true
+    min_value: 1
+    max_value: 60
+    step: 1
+    unit_of_measurement: "s"
+    icon: mdi:timer-outline
+    web_server:
+      sorting_group_id: group5
+    set_action:
+      - lambda: |-
+          id(pump_run_time_2) = x;
+          ESP_LOGI("pump", "Установлено время работы насоса Зона 2: %d секунд", (int)x);
+
+  - platform: template
+    name: "Flower3 Продолжительность полива"
+    id: pump_time_slider_3
+    optimistic: true
+    restore_value: true
+    min_value: 1
+    max_value: 60
+    step: 1
+    unit_of_measurement: "s"
+    icon: mdi:timer-outline
+    web_server:
+      sorting_group_id: group5
+    set_action:
+      - lambda: |-
+          id(pump_run_time_3) = x;
+          ESP_LOGI("pump", "Установлено время работы насоса Зона 3: %d секунд", (int)x);
+
+  - platform: template
+    name: "Flower4 Продолжительность полива"
+    id: pump_time_slider_4
+    optimistic: true
+    restore_value: true
+    min_value: 1
+    max_value: 60
+    step: 1
+    unit_of_measurement: "s"
+    icon: mdi:timer-outline
+    web_server:
+      sorting_group_id: group5
+    set_action:
+      - lambda: |-
+          id(pump_run_time_4) = x;
+          ESP_LOGI("pump", "Установлено время работы насоса Зона 4: %d секунд", (int)x);
+
+  # Поддерживаемая влажность почвы для каждой зоны
+  - platform: template
+    name: "Flower1 Поддерживать влажность"
+    id: set_moisture_slider_1
+    optimistic: true
+    restore_value: true
+    min_value: 20
+    max_value: 60
+    step: 1
+    unit_of_measurement: "%"
+    icon: mdi:water-percent
+    web_server:
+      sorting_group_id: group5
+    set_action:
+      - lambda: |-
+          id(set_moisture_1) = x;
+          ESP_LOGI("pump", "Установлено поддерживать влажность Зона 1: %d процентов", (int)x);
+
+  - platform: template
+    name: "Flower2 Поддерживать влажность"
+    id: set_moisture_slider_2
+    optimistic: true
+    restore_value: true
+    min_value: 20
+    max_value: 60
+    step: 1
+    unit_of_measurement: "%"
+    icon: mdi:water-percent
+    web_server:
+      sorting_group_id: group5
+    set_action:
+      - lambda: |-
+          id(set_moisture_2) = x;
+          ESP_LOGI("pump", "Установлено поддерживать влажность Зона 2: %d процентов", (int)x);
+
+  - platform: template
+    name: "Flower3 Поддерживать влажность"
+    id: set_moisture_slider_3
+    optimistic: true
+    restore_value: true
+    min_value: 20
+    max_value: 60
+    step: 1
+    unit_of_measurement: "%"
+    icon: mdi:water-percent
+    web_server:
+      sorting_group_id: group5
+    set_action:
+      - lambda: |-
+          id(set_moisture_3) = x;
+          ESP_LOGI("pump", "Установлено поддерживать влажность Зона 3: %d процентов", (int)x);
+
+  - platform: template
+    name: "Flower4 Поддерживать влажность"
+    id: set_moisture_slider_4
+    optimistic: true
+    restore_value: true
+    min_value: 20
+    max_value: 60
+    step: 1
+    unit_of_measurement: "%"
+    icon: mdi:water-percent
+    web_server:
+      sorting_group_id: group5
+    set_action:
+      - lambda: |-
+          id(set_moisture_4) = x;
+          ESP_LOGI("pump", "Установлено поддерживать влажность Зона 4: %d процентов", (int)x);
+
+
+  - platform: template
+    name: "Расстояние полного бака"
+    id: full_tank_distance
+    min_value: 0
+    max_value: 1000
+    step: 1
+    unit_of_measurement: "mm"
+    optimistic: true
+    restore_value: true
+    initial_value: 50
+    web_server:
+      sorting_group_id: group5
+
+  - platform: template
+    name: "Расстояние пустого бака "
+    id: empty_tank_distance
+    min_value: 0
+    max_value: 1000
+    step: 1
+    unit_of_measurement: "mm"
+    optimistic: true
+    restore_value: true
+    initial_value: 500
+    web_server:
+      sorting_group_id: group5
+
+
+
+
+
+sensor:
+  - platform: ultrasonic
+    trigger_pin: GPIO13
+    echo_pin: GPIO14
+    name: 'Ultrasonic Sensor'
+    id: ultrasonic_sensor
+    update_interval: 1s
+    accuracy_decimals: 3
+    unit_of_measurement: m
+    web_server: 
+      sorting_group_id: group6
+  - platform: template
+    name: "Ultrasonic Sensor (mm)"
+    id: ultrasonic_sensor_mm
+    unit_of_measurement: "mm"
+    accuracy_decimals: 0
+    update_interval: 1s
+    lambda: |-
+      if (isnan(id(ultrasonic_sensor).state)) {
+        return NAN;
+      }
+      return id(ultrasonic_sensor).state * 1000.0;
+    web_server:
+      sorting_group_id: group6
+
+  - platform: template
+    name: "Уровень воды в баке"
+    id: water_level_percent
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    update_interval: 1s
+    lambda: |-
+      float full = id(full_tank_distance).state;
+      float empty = id(empty_tank_distance).state;
+      float dist = id(ultrasonic_sensor_mm).state;
+
+      if (isnan(dist) || full >= empty) {
+        return NAN;  // некорректные данные
+      }
+
+      float level = (empty - dist) / (empty - full) * 100.0;
+
+      if (level < 0) level = 0;
+      if (level > 100) level = 100;
+
+      return level;
+    web_server:
+      sorting_group_id: group6
+    
+  # --- Flower 1 ---
+  - platform: xiaomi_hhccjcy01
+    mac_address: $fl1_mac
+    id: fl1
+    temperature:
+      id: f1_temp
+      name: "Temperature"
+      icon: mdi:thermometer
+      web_server:
+        sorting_group_id: group1
+    moisture:
+      id: f1_moist
+      name: "Moisture"
+      icon: mdi:water-percent
+      web_server:
+        sorting_group_id: group1
+    illuminance:
+      id: f1_lux
+      name: "Illuminance"
+      icon: mdi:white-balance-sunny
+      web_server:
+        sorting_group_id: group1
+    conductivity:
+      id: f1_cond
+      name: "Soil Conductivity"
+      icon: mdi:flash
+      web_server:
+        sorting_group_id: group1
+    battery_level:
+      id: f1_batt
+      name: "Battery"
+      icon: mdi:battery
+      web_server:
+        sorting_group_id: group1
+  # --- Flower 2 ---
+  - platform: xiaomi_hhccjcy01
+    mac_address: $fl2_mac
+    id: fl2
+    temperature:
+      id: f2_temp
+      name: "Temperature "
+      icon: mdi:thermometer
+      web_server:
+        sorting_group_id: group2
+    moisture:
+      id: f2_moist
+      name: "Moisture "
+      icon: mdi:water-percent
+      web_server:
+        sorting_group_id: group2
+    illuminance:
+      id: f2_lux
+      name: "Illuminance "
+      icon: mdi:white-balance-sunny
+      web_server:
+        sorting_group_id: group2
+    conductivity:
+      id: f2_cond
+      name: "Soil Conductivity "
+      icon: mdi:flash
+      web_server:
+        sorting_group_id: group2
+    battery_level:
+      id: f2_batt
+      name: "Battery "
+      icon: mdi:battery
+      web_server:
+        sorting_group_id: group2
+  # --- Flower 3 ---
+  - platform: xiaomi_hhccjcy01
+    mac_address: $fl3_mac
+    id: fl3
+    temperature:
+      id: f3_temp
+      name: "Temperature  "
+      icon: mdi:thermometer
+      web_server:
+        sorting_group_id: group3
+    moisture:
+      id: f3_moist
+      name: "Moisture  "
+      icon: mdi:water-percent
+      web_server:
+        sorting_group_id: group3
+    illuminance:
+      id: f3_lux
+      name: "Illuminance  "
+      icon: mdi:white-balance-sunny
+      web_server:
+        sorting_group_id: group3
+    conductivity:
+      id: f3_cond
+      name: "Soil Conductivity  "
+      icon: mdi:flash
+      web_server:
+        sorting_group_id: group3
+    battery_level:
+      id: f3_batt
+      name: "Battery  "
+      icon: mdi:battery
+      web_server:
+        sorting_group_id: group3
+  # --- Flower 4 ---
+  - platform: xiaomi_hhccjcy01
+    mac_address: $fl4_mac
+    id: fl4
+    temperature:
+      id: f4_temp
+      name: "Temperature   "
+      icon: mdi:thermometer
+      web_server:
+        sorting_group_id: group4
+    moisture:
+      id: f4_moist
+      name: "Moisture   "
+      icon: mdi:water-percent
+      web_server:
+        sorting_group_id: group4
+    illuminance:
+      id: f4_lux
+      name: "Illuminance   "
+      icon: mdi:white-balance-sunny
+      web_server:
+        sorting_group_id: group4
+    conductivity:
+      id: f4_cond
+      name: "Soil Conductivity   "
+      icon: mdi:flash
+      web_server:
+        sorting_group_id: group4
+    battery_level:
+      id: f4_batt
+      name: "Battery   "
+      icon: mdi:battery
+      web_server:
+        sorting_group_id: group4
+
+  - platform: uptime
+    name: "Uptime"
+    id: uptime_s
+    update_interval: 60s
+    web_server:
+      sorting_group_id: group6
+
+switch:
+  - platform: gpio
+    pin: $gpio_relay1
+    name: "помпа"
+    id: relay_1
+    icon: "mdi:pump"
+    restore_mode: RESTORE_DEFAULT_OFF
+    web_server:
+      sorting_group_id: group1
+
+  - platform: gpio
+    pin: $gpio_relay2
+    name: "помпа "
+    id: relay_2
+    icon: "mdi:pump"
+    restore_mode: RESTORE_DEFAULT_OFF
+    web_server:
+      sorting_group_id: group2
+
+  - platform: gpio
+    pin: $gpio_relay3
+    name: "помпа  "
+    id: relay_3
+    icon: "mdi:pump"
+    restore_mode: RESTORE_DEFAULT_OFF
+    web_server:
+      sorting_group_id: group3
+
+  - platform: gpio
+    pin: $gpio_relay4
+    name: "помпа   "
+    id: relay_4
+    icon: "mdi:pump"
+    restore_mode: RESTORE_DEFAULT_OFF
+    web_server:
+      sorting_group_id: group4
+  - platform: template
+    name: "Расписание включено"
+    id: flower_schedule_enable
+    web_server:
+      sorting_group_id: group5
+    turn_on_action:
+      - logger.log: "Расписание включено"
+    turn_off_action:
+      - logger.log: "Расписание выключено"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+
+
+time:
+  - platform: sntp
+    id: sntp_time
+    timezone: Europe/Luxembourg
+    on_time:
+      - seconds: 0
+        minutes: "*"
+        hours: "*"
+        then:
+          - lambda: |-
+              if (!id(flower_schedule_enable).state) {
+                ESP_LOGD("watering", "Расписание отключено — пропуск проверки влажности.");
+                return;
+              }
+              auto now = id(sntp_time).now();
+              if (!now.is_valid()) return;
+
+              char current_time[6];
+              sprintf(current_time, "%02d:%02d", now.hour, now.minute);
+
+              std::string schedule = id(flower_schedule);
+              bool match = false;
+
+              size_t start = 0;
+              while (true) {
+                size_t end = schedule.find(';', start);
+                std::string token = schedule.substr(start, end - start);
+                token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
+                if (token == current_time) {
+                  match = true;
+                  break;
+                }
+                if (end == std::string::npos) break;
+                start = end + 1;
+              }
+
+              if (!match) return;
+
+              struct Zone {
+                esphome::sensor::Sensor *sensor;
+                const char *name;
+                int moisture_target;
+                void (*run_pump)();
+              };
+
+              Zone zones[] = {
+                { id(f1_moist), "Зона 1", id(set_moisture_1), []() { id(pump_on_zone_1).execute(); } },
+                { id(f2_moist), "Зона 2", id(set_moisture_2), []() { id(pump_on_zone_2).execute(); } },
+                { id(f3_moist), "Зона 3", id(set_moisture_3), []() { id(pump_on_zone_3).execute(); } },
+                { id(f4_moist), "Зона 4", id(set_moisture_4), []() { id(pump_on_zone_4).execute(); } },
+              };
+
+              for (auto &z : zones) {
+                float moist = z.sensor->state;
+                if (isnan(moist)) {
+                  ESP_LOGW("watering", "%s: нет данных с датчика", z.name);
+                  continue;
+                }
+                if (moist < z.moisture_target) {
+                  ESP_LOGI("watering", "%s: влажность %.1f < %d — включаем насос", z.name, moist, z.moisture_target);
+                  z.run_pump();
+                } else {
+                  ESP_LOGD("watering", "%s: влажность %.1f >= %d — насос не включаем", z.name, moist, z.moisture_target);
+                }
+              }
