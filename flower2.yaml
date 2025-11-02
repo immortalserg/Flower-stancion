@@ -4,13 +4,17 @@ substitutions:
   manufacture: Kusheev Sergei
   device_description: "Flower systeme"
   version: 1.0.0
+  # выводы к которым подключены помпы
   gpio_relay1: GPIO16
   gpio_relay2: GPIO17
   gpio_relay3: GPIO26
   gpio_relay4: GPIO27
-  fl1_mac: "FF:FF:FF:FF:FF:FF"
-  fl2_mac: "FF:FF:FF:FF:FF:FF"
-  fl3_mac: "FF:FF:FF:FF:FF:FF"
+  # датчик расстояния HC-SR04
+  gpio_trigger_pin: GPIO13
+  gpio_echo_pin: GPIO14
+  fl1_mac: "5C:85:7E:13:D6:1F"
+  fl2_mac: "5C:85:7E:13:D4:AB"
+  fl3_mac: "5C:85:7E:13:D6:19"
   fl4_mac: "FF:FF:FF:FF:FF:FF"
 globals:
   - id: flower1_mac
@@ -569,8 +573,8 @@ number:
 
 sensor:
   - platform: ultrasonic
-    trigger_pin: GPIO13
-    echo_pin: GPIO14
+    trigger_pin: $gpio_trigger_pin
+    echo_pin: $gpio_echo_pin
     name: 'Ultrasonic Sensor'
     id: ultrasonic_sensor
     update_interval: 1s
