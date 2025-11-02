@@ -86,14 +86,7 @@ esp32:
 #  board: esp32-c3-devkitm-1
   framework:
     type: arduino
-i2c:
-  sda: GPIO21
-  scl: GPIO22
-  #scan: true
-pcf8574:
-  - id: 'pcf8574_hub'
-    address: 0x20
-    pcf8575: False
+
 
 # Enable logging
 logger:
