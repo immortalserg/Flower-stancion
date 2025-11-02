@@ -95,56 +95,6 @@ pcf8574:
     address: 0x20
     pcf8575: False
 
-matrix_keypad:
-  id: mykeypad
-  rows:
-    - pin:
-        pcf8574: pcf8574_hub
-        number: 0
-        mode: OUTPUT
-        inverted: False
-    - pin:
-        pcf8574: pcf8574_hub
-        number: 1
-        mode: OUTPUT
-        inverted: False        
-    - pin:
-        pcf8574: pcf8574_hub
-        number: 2
-        mode: OUTPUT
-        inverted: False
-    - pin:
-        pcf8574: pcf8574_hub
-        number: 3
-        mode: OUTPUT
-        inverted: False
-  columns:
-    - pin:
-        pcf8574: pcf8574_hub
-        number: 4
-        mode: INPUT
-        inverted: False
-    - pin:
-        pcf8574: pcf8574_hub
-        number: 5
-        mode: INPUT
-        inverted: False
-    - pin:
-        pcf8574: pcf8574_hub
-        number: 6
-        mode: INPUT
-        inverted: False
-    - pin:
-        pcf8574: pcf8574_hub
-        number: 7
-        mode: INPUT
-        inverted: False
-  keys: "123A456B789C*0#D"
-  has_diodes: false
-  on_key:
-    - lambda: ESP_LOGI("KEY", "key %d pressed", x);
-
-
 # Enable logging
 logger:
   level: INFO
