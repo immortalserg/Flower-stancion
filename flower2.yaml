@@ -38,6 +38,26 @@ globals:
     restore_value: true
     max_restore_data_length: 100
     initial_value: '"08:00"'
+  - id: flower1_schedule
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 100
+    initial_value: '"08:00"'
+  - id: flower2_schedule
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 100
+    initial_value: '"08:10"'
+  - id: flower3_schedule
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 100
+    initial_value: '"08:20"'
+  - id: flower4_schedule
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 100
+    initial_value: '"08:30"'
   - id: pump_run_time_1
     type: int
     restore_value: yes
@@ -70,6 +90,26 @@ globals:
     type: int
     restore_value: yes
     initial_value: '50'
+  - id: last_watering_zone1
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 20
+    initial_value: '"—"'
+  - id: last_watering_zone2
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 20
+    initial_value: '"—"'
+  - id: last_watering_zone3
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 20
+    initial_value: '"—"'
+  - id: last_watering_zone4
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 20
+    initial_value: '"—"'
 
 
 
@@ -153,11 +193,23 @@ web_server:
       name: "🌿 Flower4"
       sorting_weight: 40
     - id: group5
-      name: "📊 Setting"
-      sorting_weight: 50
+      name: "⚙️ Setting"
+      sorting_weight: 60
     - id: group6
       name: "📊 Sensor"
       sorting_weight: 45
+    - id: group7
+      name: "⚙️ Flower1 Setting"
+      sorting_weight: 46
+    - id: group8
+      name: "⚙️ Flower2 Setting"
+      sorting_weight: 47
+    - id: group9
+      name: "⚙️ Flower3 Setting"
+      sorting_weight: 48
+    - id: group10
+      name: "⚙️ Flower4 Setting"
+      sorting_weight: 49
   
 
 esp32_ble:
@@ -214,7 +266,7 @@ script:
 
 text:
   - platform: template
-    name: "Flower1 MAC"
+    name: "MAC"
     id: flower1_mac_text
     mode: text
     icon: mdi:bluetooth
@@ -229,10 +281,10 @@ text:
             ESP_LOGW("BLE", "Некорректный MAC: %s", x.c_str());
           }
     web_server:
-      sorting_group_id: group5
+      sorting_group_id: group7
 
   - platform: template
-    name: "Flower2 MAC"
+    name: "MAC "
     id: flower2_mac_text
     mode: text
     icon: mdi:bluetooth
@@ -247,10 +299,10 @@ text:
             ESP_LOGW("BLE", "Некорректный MAC: %s", x.c_str());
           }
     web_server:
-      sorting_group_id: group5
+      sorting_group_id: group8
 
   - platform: template
-    name: "Flower3 MAC"
+    name: "MAC  "
     id: flower3_mac_text
     mode: text
     icon: mdi:bluetooth
@@ -265,10 +317,10 @@ text:
             ESP_LOGW("BLE", "Некорректный MAC: %s", x.c_str());
           }
     web_server:
-      sorting_group_id: group5
+      sorting_group_id: group9
 
   - platform: template
-    name: "Flower4 MAC"
+    name: "MAC   "
     id: flower4_mac_text
     mode: text
     icon: mdi:bluetooth
@@ -283,27 +335,72 @@ text:
             ESP_LOGW("BLE", "Некорректный MAC: %s", x.c_str());
           }
     web_server:
-      sorting_group_id: group5
+      sorting_group_id: group10
   - platform: template
     name: "Расписание"
     id: flower1_schedule_text
     icon: "mdi:calendar-clock"
     mode: text
     lambda: |-
-      return id(flower_schedule);
-    update_interval: 60s
-    web_server:
-      sorting_group_id: group5
+      return id(flower1_schedule);
     set_action:
       then:
         - lambda: |-
-            ESP_LOGI("schedule", "Новое расписание: %s", x.c_str());
-            id(flower_schedule) = x;
+            ESP_LOGI("schedule", "Новое расписание Flower1: %s", x.c_str());
+            id(flower1_schedule) = x;
+    web_server:
+      sorting_group_id: group7
+
+  - platform: template
+    name: "Расписaние"
+    id: flower2_schedule_text
+    icon: "mdi:calendar-clock"
+    mode: text
+    lambda: |-
+      return id(flower2_schedule);
+    set_action:
+      then:
+        - lambda: |-
+            ESP_LOGI("schedule", "Новое расписание Flower2: %s", x.c_str());
+            id(flower2_schedule) = x;
+    web_server:
+      sorting_group_id: group8
+
+  - platform: template
+    name: "Рaсписание"
+    id: flower3_schedule_text
+    icon: "mdi:calendar-clock"
+    mode: text
+    lambda: |-
+      return id(flower3_schedule);
+    set_action:
+      then:
+        - lambda: |-
+            ESP_LOGI("schedule", "Новое расписание Flower3: %s", x.c_str());
+            id(flower3_schedule) = x;
+    web_server:
+      sorting_group_id: group9
+
+  - platform: template
+    name: "Рaсписaние"
+    id: flower4_schedule_text
+    icon: "mdi:calendar-clock"
+    mode: text
+    lambda: |-
+      return id(flower4_schedule);
+    set_action:
+      then:
+        - lambda: |-
+            ESP_LOGI("schedule", "Новое расписание Flower4: %s", x.c_str());
+            id(flower4_schedule) = x;
+    web_server:
+      sorting_group_id: group10
+
 
 number:
   # Продолжительность полива для каждой зоны
   - platform: template
-    name: "Flower1 Продолжительность полива"
+    name: "Продолжительность полива"
     id: pump_time_slider_1
     optimistic: true
     restore_value: true
@@ -313,14 +410,14 @@ number:
     unit_of_measurement: "s"
     icon: mdi:timer-outline
     web_server:
-      sorting_group_id: group5
+      sorting_group_id: group7
     set_action:
       - lambda: |-
           id(pump_run_time_1) = x;
           ESP_LOGI("pump", "Установлено время работы насоса Зона 1: %d секунд", (int)x);
 
   - platform: template
-    name: "Flower2 Продолжительность полива"
+    name: "Продолжительность поливa"
     id: pump_time_slider_2
     optimistic: true
     restore_value: true
@@ -330,14 +427,14 @@ number:
     unit_of_measurement: "s"
     icon: mdi:timer-outline
     web_server:
-      sorting_group_id: group5
+      sorting_group_id: group8
     set_action:
       - lambda: |-
           id(pump_run_time_2) = x;
           ESP_LOGI("pump", "Установлено время работы насоса Зона 2: %d секунд", (int)x);
 
   - platform: template
-    name: "Flower3 Продолжительность полива"
+    name: "Продолжительность пoлива"
     id: pump_time_slider_3
     optimistic: true
     restore_value: true
@@ -347,14 +444,14 @@ number:
     unit_of_measurement: "s"
     icon: mdi:timer-outline
     web_server:
-      sorting_group_id: group5
+      sorting_group_id: group9
     set_action:
       - lambda: |-
           id(pump_run_time_3) = x;
           ESP_LOGI("pump", "Установлено время работы насоса Зона 3: %d секунд", (int)x);
 
   - platform: template
-    name: "Flower4 Продолжительность полива"
+    name: "Продoлжительность полива"
     id: pump_time_slider_4
     optimistic: true
     restore_value: true
@@ -364,7 +461,7 @@ number:
     unit_of_measurement: "s"
     icon: mdi:timer-outline
     web_server:
-      sorting_group_id: group5
+      sorting_group_id: group10
     set_action:
       - lambda: |-
           id(pump_run_time_4) = x;
@@ -372,7 +469,7 @@ number:
 
   # Поддерживаемая влажность почвы для каждой зоны
   - platform: template
-    name: "Flower1 Поддерживать влажность"
+    name: "Поддерживать влажность"
     id: set_moisture_slider_1
     optimistic: true
     restore_value: true
@@ -382,14 +479,14 @@ number:
     unit_of_measurement: "%"
     icon: mdi:water-percent
     web_server:
-      sorting_group_id: group5
+      sorting_group_id: group7
     set_action:
       - lambda: |-
           id(set_moisture_1) = x;
           ESP_LOGI("pump", "Установлено поддерживать влажность Зона 1: %d процентов", (int)x);
 
   - platform: template
-    name: "Flower2 Поддерживать влажность"
+    name: "Поддерживaть влажность"
     id: set_moisture_slider_2
     optimistic: true
     restore_value: true
@@ -399,14 +496,14 @@ number:
     unit_of_measurement: "%"
     icon: mdi:water-percent
     web_server:
-      sorting_group_id: group5
+      sorting_group_id: group8
     set_action:
       - lambda: |-
           id(set_moisture_2) = x;
           ESP_LOGI("pump", "Установлено поддерживать влажность Зона 2: %d процентов", (int)x);
 
   - platform: template
-    name: "Flower3 Поддерживать влажность"
+    name: "Поддерживать влaжность"
     id: set_moisture_slider_3
     optimistic: true
     restore_value: true
@@ -416,14 +513,14 @@ number:
     unit_of_measurement: "%"
     icon: mdi:water-percent
     web_server:
-      sorting_group_id: group5
+      sorting_group_id: group9
     set_action:
       - lambda: |-
           id(set_moisture_3) = x;
           ESP_LOGI("pump", "Установлено поддерживать влажность Зона 3: %d процентов", (int)x);
 
   - platform: template
-    name: "Flower4 Поддерживать влажность"
+    name: "Пoддерживать влажность"
     id: set_moisture_slider_4
     optimistic: true
     restore_value: true
@@ -433,7 +530,7 @@ number:
     unit_of_measurement: "%"
     icon: mdi:water-percent
     web_server:
-      sorting_group_id: group5
+      sorting_group_id: group10
     set_action:
       - lambda: |-
           id(set_moisture_4) = x;
@@ -454,7 +551,7 @@ number:
       sorting_group_id: group5
 
   - platform: template
-    name: "Расстояние пустого бака "
+    name: "Расстояние пустого бакa"
     id: empty_tank_distance
     min_value: 0
     max_value: 1000
@@ -656,12 +753,11 @@ sensor:
       web_server:
         sorting_group_id: group4
 
-  - platform: uptime
-    name: "Uptime"
-    id: uptime_s
-    update_interval: 60s
-    web_server:
-      sorting_group_id: group6
+
+
+
+
+
 
 switch:
   - platform: gpio
@@ -672,45 +768,124 @@ switch:
     restore_mode: RESTORE_DEFAULT_OFF
     web_server:
       sorting_group_id: group1
+    on_turn_on:
+      - lambda: |-
+          id(last_watering_zone1) = id(sntp_time).now().strftime("%Y-%m-%d %H:%M");
+          id(last_watering_sensor_1).publish_state(id(last_watering_zone1));
 
   - platform: gpio
     pin: $gpio_relay2
-    name: "помпа "
+    name: "пoмпа"
     id: relay_2
     icon: "mdi:pump"
     restore_mode: RESTORE_DEFAULT_OFF
     web_server:
       sorting_group_id: group2
+    on_turn_on:
+      - lambda: |-
+          id(last_watering_zone2) = id(sntp_time).now().strftime("%Y-%m-%d %H:%M");
+          id(last_watering_sensor_2).publish_state(id(last_watering_zone2));
 
   - platform: gpio
     pin: $gpio_relay3
-    name: "помпа  "
+    name: "помпa"
     id: relay_3
     icon: "mdi:pump"
     restore_mode: RESTORE_DEFAULT_OFF
     web_server:
       sorting_group_id: group3
+    on_turn_on:
+      - lambda: |-
+          id(last_watering_zone3) = id(sntp_time).now().strftime("%Y-%m-%d %H:%M");
+          id(last_watering_sensor_3).publish_state(id(last_watering_zone3));
 
   - platform: gpio
     pin: $gpio_relay4
-    name: "помпа   "
+    name: "пoмпa"
     id: relay_4
     icon: "mdi:pump"
     restore_mode: RESTORE_DEFAULT_OFF
     web_server:
       sorting_group_id: group4
+    on_turn_on:
+      - lambda: |-
+          id(last_watering_zone4) = id(sntp_time).now().strftime("%Y-%m-%d %H:%M");
+          id(last_watering_sensor_4).publish_state(id(last_watering_zone4));
+
   - platform: template
     name: "Расписание включено"
-    id: flower_schedule_enable
+    id: flower1_schedule_enable
     web_server:
-      sorting_group_id: group5
-    turn_on_action:
-      - logger.log: "Расписание включено"
-    turn_off_action:
-      - logger.log: "Расписание выключено"
+      sorting_group_id: group7
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
+    turn_on_action:
+      - logger.log: "Расписание Flower1 включено"
+    turn_off_action:
+      - logger.log: "Расписание Flower1 выключено"
 
+  - platform: template
+    name: "Расписание включенo"
+    id: flower2_schedule_enable
+    web_server:
+      sorting_group_id: group8
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    turn_on_action:
+      - logger.log: "Расписание Flower2 включено"
+    turn_off_action:
+      - logger.log: "Расписание Flower2 выключено"
+
+  - platform: template
+    name: "Рaсписание включено"
+    id: flower3_schedule_enable
+    web_server:
+      sorting_group_id: group9
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    turn_on_action:
+      - logger.log: "Расписание Flower3 включено"
+    turn_off_action:
+      - logger.log: "Расписание Flower3 выключено"
+
+  - platform: template
+    name: "Расписaние включено"
+    id: flower4_schedule_enable
+    web_server:
+      sorting_group_id: group10
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    turn_on_action:
+      - logger.log: "Расписание Flower4 включено"
+    turn_off_action:
+      - logger.log: "Расписание Flower4 выключено"
+
+
+text_sensor:
+  - platform: template
+    name: "Последний полив"
+    id: last_watering_sensor_1
+    icon: mdi:clock
+    web_server:
+      sorting_group_id: group1
+  - platform: template
+    name: "Последний пoлив"
+    id: last_watering_sensor_2
+    icon: mdi:clock
+    web_server:
+      sorting_group_id: group2
+  - platform: template
+    name: "Пoследний полив"
+    id: last_watering_sensor_3
+    icon: mdi:clock
+    web_server:
+      sorting_group_id: group3
+  - platform: template
+    name: "Пoследний пoлив"
+    id: last_watering_sensor_4
+    icon: mdi:clock
+    web_server:
+      sorting_group_id: group4
 
 time:
   - platform: sntp
@@ -722,54 +897,68 @@ time:
         hours: "*"
         then:
           - lambda: |-
-              if (!id(flower_schedule_enable).state) {
-                ESP_LOGD("watering", "Расписание отключено — пропуск проверки влажности.");
+              // Проверяем, включено ли хоть одно расписание по зонам
+              if (!id(flower1_schedule_enable).state &&
+                  !id(flower2_schedule_enable).state &&
+                  !id(flower3_schedule_enable).state &&
+                  !id(flower4_schedule_enable).state) {
+                ESP_LOGD("watering", "Все расписания отключены — пропуск проверки влажности.");
                 return;
               }
+
               auto now = id(sntp_time).now();
               if (!now.is_valid()) return;
 
               char current_time[6];
               sprintf(current_time, "%02d:%02d", now.hour, now.minute);
 
-              std::string schedule = id(flower_schedule);
-              bool match = false;
-
-              size_t start = 0;
-              while (true) {
-                size_t end = schedule.find(';', start);
-                std::string token = schedule.substr(start, end - start);
-                token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
-                if (token == current_time) {
-                  match = true;
-                  break;
-                }
-                if (end == std::string::npos) break;
-                start = end + 1;
-              }
-
-              if (!match) return;
-
+              // Структура зоны
               struct Zone {
                 esphome::sensor::Sensor *sensor;
                 const char *name;
                 int moisture_target;
-                void (*run_pump)();
+                std::string schedule;
+                std::function<void()> run_pump;
+                bool enabled;
               };
 
               Zone zones[] = {
-                { id(f1_moist), "Зона 1", id(set_moisture_1), []() { id(pump_on_zone_1).execute(); } },
-                { id(f2_moist), "Зона 2", id(set_moisture_2), []() { id(pump_on_zone_2).execute(); } },
-                { id(f3_moist), "Зона 3", id(set_moisture_3), []() { id(pump_on_zone_3).execute(); } },
-                { id(f4_moist), "Зона 4", id(set_moisture_4), []() { id(pump_on_zone_4).execute(); } },
+                { id(f1_moist), "Зона 1", id(set_moisture_1), id(flower1_schedule), []() { id(pump_on_zone_1).execute(); }, id(flower1_schedule_enable).state },
+                { id(f2_moist), "Зона 2", id(set_moisture_2), id(flower2_schedule), []() { id(pump_on_zone_2).execute(); }, id(flower2_schedule_enable).state },
+                { id(f3_moist), "Зона 3", id(set_moisture_3), id(flower3_schedule), []() { id(pump_on_zone_3).execute(); }, id(flower3_schedule_enable).state },
+                { id(f4_moist), "Зона 4", id(set_moisture_4), id(flower4_schedule), []() { id(pump_on_zone_4).execute(); }, id(flower4_schedule_enable).state },
               };
 
               for (auto &z : zones) {
+                if (!z.enabled) {
+                  ESP_LOGD("watering", "%s: расписание выключено — пропускаем", z.name);
+                  continue;
+                }
+
+                std::string schedule = z.schedule;
+                bool match = false;
+
+                size_t start = 0;
+                while (true) {
+                  size_t end = schedule.find(';', start);
+                  std::string token = schedule.substr(start, end - start);
+                  token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
+                  if (token == current_time) {
+                    match = true;
+                    break;
+                  }
+                  if (end == std::string::npos) break;
+                  start = end + 1;
+                }
+
+                if (!match) continue;
+
                 float moist = z.sensor->state;
                 if (isnan(moist)) {
                   ESP_LOGW("watering", "%s: нет данных с датчика", z.name);
                   continue;
                 }
+
                 if (moist < z.moisture_target) {
                   ESP_LOGI("watering", "%s: влажность %.1f < %d — включаем насос", z.name, moist, z.moisture_target);
                   z.run_pump();
