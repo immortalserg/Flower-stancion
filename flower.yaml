@@ -12,9 +12,9 @@ substitutions:
   # датчик расстояния HC-SR04
   gpio_trigger_pin: GPIO13
   gpio_echo_pin: GPIO14
-  fl1_mac: "5C:85:7E:13:D6:1F"
-  fl2_mac: "5C:85:7E:13:D4:AB"
-  fl3_mac: "5C:85:7E:13:D6:19"
+  fl1_mac: "FF:FF:FF:FF:FF:FF"
+  fl2_mac: "FF:FF:FF:FF:FF:FF"
+  fl3_mac: "FF:FF:FF:FF:FF:FF"
   fl4_mac: "FF:FF:FF:FF:FF:FF"
 globals:
   - id: flower1_mac
@@ -163,6 +163,16 @@ esphome:
           id(fl2_10).set_address(parse_mac(id(flower2_mac).c_str()));
           id(fl3_10).set_address(parse_mac(id(flower3_mac).c_str()));
           id(fl4_10).set_address(parse_mac(id(flower4_mac).c_str()));
+
+          id(fl1_02).set_address(parse_mac(id(flower1_mac).c_str()));
+          id(fl2_02).set_address(parse_mac(id(flower2_mac).c_str()));
+          id(fl3_02).set_address(parse_mac(id(flower3_mac).c_str()));
+          id(fl4_02).set_address(parse_mac(id(flower4_mac).c_str()));
+
+          id(fl1_002).set_address(parse_mac(id(flower1_mac).c_str()));
+          id(fl2_002).set_address(parse_mac(id(flower2_mac).c_str()));
+          id(fl3_002).set_address(parse_mac(id(flower3_mac).c_str()));
+          id(fl4_002).set_address(parse_mac(id(flower4_mac).c_str()));
       - lambda: |-
           id(pump_time_slider_1).publish_state(id(pump_run_time_1));
           id(pump_time_slider_2).publish_state(id(pump_run_time_2));
@@ -802,6 +812,7 @@ sensor:
   # Зона 1 HHCCPOT002 — только влажность и проводимость
   - platform: xiaomi_hhccpot002
     mac_address: $fl1_mac
+    id: fl1_02
     moisture:
       id: f1_moist_002
     conductivity:
@@ -810,6 +821,7 @@ sensor:
   # Зона 1 GCLS002 — без батареи
   - platform: xiaomi_gcls002
     mac_address: $fl1_mac
+    id: fl1_002
     temperature:
       id: f1_temp_gcls
     moisture:
@@ -853,6 +865,7 @@ sensor:
   # Зона 2 HHCCPOT002 — только влажность и проводимость
   - platform: xiaomi_hhccpot002
     mac_address: $fl2_mac
+    id: fl2_02
     moisture:
       id: f2_moist_002
     conductivity:
@@ -861,6 +874,7 @@ sensor:
   # Зона 1 GCLS002 — без батареи
   - platform: xiaomi_gcls002
     mac_address: $fl2_mac
+    id: fl2_002
     temperature:
       id: f2_temp_gcls
     moisture:
@@ -904,6 +918,7 @@ sensor:
   # Зона 3 HHCCPOT002 — только влажность и проводимость
   - platform: xiaomi_hhccpot002
     mac_address: $fl3_mac
+    id: fl3_02
     moisture:
       id: f3_moist_002
     conductivity:
@@ -912,6 +927,7 @@ sensor:
   # Зона 3 GCLS002 — без батареи
   - platform: xiaomi_gcls002
     mac_address: $fl3_mac
+    id: fl3_002
     temperature:
       id: f3_temp_gcls
     moisture:
@@ -955,6 +971,7 @@ sensor:
   # Зона 1 HHCCPOT002 — только влажность и проводимость
   - platform: xiaomi_hhccpot002
     mac_address: $fl4_mac
+    id: fl4_02
     moisture:
       id: f4_moist_002
     conductivity:
@@ -963,6 +980,7 @@ sensor:
   # Зона 1 GCLS002 — без батареи
   - platform: xiaomi_gcls002
     mac_address: $fl4_mac
+    id: fl4_002
     temperature:
       id: f4_temp_gcls
     moisture:
