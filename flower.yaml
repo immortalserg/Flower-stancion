@@ -114,7 +114,22 @@ globals:
     restore_value: true
     max_restore_data_length: 20
     initial_value: '"—"'
-
+  - id: flower1_sensor_model
+    type: int
+    restore_value: yes
+    initial_value: '1' # 1 = hhccjcy01, 2 = hhccjcy10
+  - id: flower2_sensor_model
+    type: int
+    restore_value: yes
+    initial_value: '1'
+  - id: flower3_sensor_model
+    type: int
+    restore_value: yes
+    initial_value: '1'
+  - id: flower4_sensor_model
+    type: int
+    restore_value: yes
+    initial_value: '1'
 
 
 
@@ -140,10 +155,14 @@ esphome:
             return value;
           };
           ESP_LOGI("boot", "Применение MAC адресов из globals:");
-          id(fl1).set_address(parse_mac(id(flower1_mac).c_str()));
-          id(fl2).set_address(parse_mac(id(flower2_mac).c_str()));
-          id(fl3).set_address(parse_mac(id(flower3_mac).c_str()));
-          id(fl4).set_address(parse_mac(id(flower4_mac).c_str()));
+          id(fl1_01).set_address(parse_mac(id(flower1_mac).c_str()));
+          id(fl2_01).set_address(parse_mac(id(flower2_mac).c_str()));
+          id(fl3_01).set_address(parse_mac(id(flower3_mac).c_str()));
+          id(fl4_01).set_address(parse_mac(id(flower4_mac).c_str()));
+          id(fl1_10).set_address(parse_mac(id(flower1_mac).c_str()));
+          id(fl2_10).set_address(parse_mac(id(flower2_mac).c_str()));
+          id(fl3_10).set_address(parse_mac(id(flower3_mac).c_str()));
+          id(fl4_10).set_address(parse_mac(id(flower4_mac).c_str()));
       - lambda: |-
           id(pump_time_slider_1).publish_state(id(pump_run_time_1));
           id(pump_time_slider_2).publish_state(id(pump_run_time_2));
@@ -154,6 +173,22 @@ esphome:
           id(set_moisture_slider_2).publish_state(id(set_moisture_2));
           id(set_moisture_slider_3).publish_state(id(set_moisture_3));
           id(set_moisture_slider_4).publish_state(id(set_moisture_4));
+      - lambda: |-
+          auto update_select = [](int model, auto select_id) {
+            if (model == 1)
+              select_id->publish_state("HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor");
+            else if (model == 2)
+              select_id->publish_state("HHCCJCY10 Xiaomi MiFlora (Pink version)");
+            else if (model == 3)
+              select_id->publish_state("HHCCPOT002 Xiaomi VegTrug Grow Care Garden");
+            else if (model == 4)
+              select_id->publish_state("GCLS002 Generic Flora Sensor");
+          };
+
+          update_select(id(flower1_sensor_model), id(flower1_sensor_model_select));
+          update_select(id(flower2_sensor_model), id(flower2_sensor_model_select));
+          update_select(id(flower3_sensor_model), id(flower3_sensor_model_select));
+          update_select(id(flower4_sensor_model), id(flower4_sensor_model_select));
 
 
 esp32:
@@ -568,6 +603,119 @@ number:
       sorting_group_id: group5
 
 
+select:
+  - platform: template
+    name: "Модель датчика"
+    id: flower1_sensor_model_select
+    options:
+      - "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
+      - "HHCCJCY10 Xiaomi MiFlora (Pink version)"
+      - "HHCCPOT002 Xiaomi VegTrug Grow Care Garden"
+      - "GCLS002 Generic Flora Sensor"
+    optimistic: true
+    initial_option: "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
+    web_server:
+      sorting_group_id: group7
+    on_value:
+      - lambda: |-
+          if (x == "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor") {
+            id(flower1_sensor_model) = 1;
+            ESP_LOGI("watering", "🌸 Зона 1: выбран HHCCJCY01 🔄 Перезагрузите устройство");
+          } else if (x == "HHCCJCY10 Xiaomi MiFlora (Pink version)") {
+            id(flower1_sensor_model) = 2;
+            ESP_LOGI("watering", "🌸 Зона 1: выбран HHCCJCY10 🔄 Перезагрузите устройство");
+          } else if (x == "HHCCPOT002 Xiaomi VegTrug Grow Care Garden") {
+            id(flower1_sensor_model) = 3;
+            ESP_LOGI("watering", "🌸 Зона 1: выбран HHCCPOT002 🔄 Перезагрузите устройство");
+          } else if (x == "GCLS002 Generic Flora Sensor") {
+            id(flower1_sensor_model) = 4;
+            ESP_LOGI("watering", "🌸 Зона 1: выбран GCLS002 🔄 Перезагрузите устройство");
+          }
+
+  - platform: template
+    name: "Модель датчикa"
+    id: flower2_sensor_model_select
+    options:
+      - "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
+      - "HHCCJCY10 Xiaomi MiFlora (Pink version)"
+      - "HHCCPOT002 Xiaomi VegTrug Grow Care Garden"
+      - "GCLS002 Generic Flora Sensor"
+    optimistic: true
+    initial_option: "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
+    web_server:
+      sorting_group_id: group8
+    on_value:
+      - lambda: |-
+          if (x == "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor") {
+            id(flower2_sensor_model) = 1;
+            ESP_LOGI("watering", "🌸 Зона 2: выбран HHCCJCY01 🔄 Перезагрузите устройство");
+          } else if (x == "HHCCJCY10 Xiaomi MiFlora (Pink version)") {
+            id(flower2_sensor_model) = 2;
+            ESP_LOGI("watering", "🌸 Зона 2: выбран HHCCJCY10 🔄 Перезагрузите устройство");
+          } else if (x == "HHCCPOT002 Xiaomi VegTrug Grow Care Garden") {
+            id(flower2_sensor_model) = 3;
+            ESP_LOGI("watering", "🌸 Зона 2: выбран HHCCPOT002 🔄 Перезагрузите устройство");
+          } else if (x == "GCLS002 Generic Flora Sensor") {
+            id(flower2_sensor_model) = 4;
+            ESP_LOGI("watering", "🌸 Зона 2: выбран GCLS002 🔄 Перезагрузите устройство");
+          }
+
+  - platform: template
+    name: "Модель дaтчика"
+    id: flower3_sensor_model_select
+    options:
+      - "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
+      - "HHCCJCY10 Xiaomi MiFlora (Pink version)"
+      - "HHCCPOT002 Xiaomi VegTrug Grow Care Garden"
+      - "GCLS002 Generic Flora Sensor"
+    optimistic: true
+    initial_option: "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
+    web_server:
+      sorting_group_id: group9
+    on_value:
+      - lambda: |-
+          if (x == "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor") {
+            id(flower3_sensor_model) = 1;
+            ESP_LOGI("watering", "🌸 Зона 3: выбран HHCCJCY01 🔄 Перезагрузите устройство");
+          } else if (x == "HHCCJCY10 Xiaomi MiFlora (Pink version)") {
+            id(flower3_sensor_model) = 2;
+            ESP_LOGI("watering", "🌸 Зона 3: выбран HHCCJCY10 🔄 Перезагрузите устройство");
+          } else if (x == "HHCCPOT002 Xiaomi VegTrug Grow Care Garden") {
+            id(flower3_sensor_model) = 3;
+            ESP_LOGI("watering", "🌸 Зона 3: выбран HHCCPOT002 🔄 Перезагрузите устройство");
+          } else if (x == "GCLS002 Generic Flora Sensor") {
+            id(flower3_sensor_model) = 4;
+            ESP_LOGI("watering", "🌸 Зона 3: выбран GCLS002 🔄 Перезагрузите устройство");
+          }
+
+  - platform: template
+    name: "Модель дaтчикa"
+    id: flower4_sensor_model_select
+    options:
+      - "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
+      - "HHCCJCY10 Xiaomi MiFlora (Pink version)"
+      - "HHCCPOT002 Xiaomi VegTrug Grow Care Garden"
+      - "GCLS002 Generic Flora Sensor"
+    optimistic: true
+    initial_option: "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
+    web_server:
+      sorting_group_id: group10
+    on_value:
+      - lambda: |-
+          if (x == "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor") {
+            id(flower4_sensor_model) = 1;
+            ESP_LOGI("watering", "🌸 Зона 4: выбран HHCCJCY01 🔄 Перезагрузите устройство");
+          } else if (x == "HHCCJCY10 Xiaomi MiFlora (Pink version)") {
+            id(flower4_sensor_model) = 2;
+            ESP_LOGI("watering", "🌸 Зона 4: выбран HHCCJCY10 🔄 Перезагрузите устройство");
+          } else if (x == "HHCCPOT002 Xiaomi VegTrug Grow Care Garden") {
+            id(flower4_sensor_model) = 3;
+            ESP_LOGI("watering", "🌸 Зона 4: выбран HHCCPOT002 🔄 Перезагрузите устройство");
+          } else if (x == "GCLS002 Generic Flora Sensor") {
+            id(flower4_sensor_model) = 4;
+            ESP_LOGI("watering", "🌸 Зона 4: выбран GCLS002 🔄 Перезагрузите устройство");
+          }
+
 
 
 
@@ -619,145 +767,526 @@ sensor:
       return level;
     web_server:
       sorting_group_id: group6
-    
-  # --- Flower 1 ---
+
+
+  # Зона 1 hhccjcy01
   - platform: xiaomi_hhccjcy01
     mac_address: $fl1_mac
-    id: fl1
+    id: fl1_01
     temperature:
-      id: f1_temp
-      name: "Temperature"
-      icon: mdi:thermometer
-      web_server:
-        sorting_group_id: group1
+      id: f1_temp_01
     moisture:
-      id: f1_moist
-      name: "Moisture"
-      icon: mdi:water-percent
-      web_server:
-        sorting_group_id: group1
+      id: f1_moist_01
     illuminance:
-      id: f1_lux
-      name: "Illuminance"
-      icon: mdi:white-balance-sunny
-      web_server:
-        sorting_group_id: group1
+      id: f1_lux_01
     conductivity:
-      id: f1_cond
-      name: "Soil Conductivity"
-      icon: mdi:flash
-      web_server:
-        sorting_group_id: group1
+      id: f1_cond_01
     battery_level:
-      id: f1_batt
-      name: "Battery"
-      icon: mdi:battery
-      web_server:
-        sorting_group_id: group1
-  # --- Flower 2 ---
+      id: f1_batt_01
+
+  # Зона 1 hhccjcy10
+  - platform: xiaomi_hhccjcy10
+    mac_address: $fl1_mac
+    id: fl1_10
+    temperature:
+      id: f1_temp_10
+    moisture:
+      id: f1_moist_10
+    illuminance:
+      id: f1_lux_10
+    conductivity:
+      id: f1_cond_10
+    battery_level:
+      id: f1_batt_10
+
+  # Зона 1 HHCCPOT002 — только влажность и проводимость
+  - platform: xiaomi_hhccpot002
+    mac_address: $fl1_mac
+    moisture:
+      id: f1_moist_002
+    conductivity:
+      id: f1_cond_002
+
+  # Зона 1 GCLS002 — без батареи
+  - platform: xiaomi_gcls002
+    mac_address: $fl1_mac
+    temperature:
+      id: f1_temp_gcls
+    moisture:
+      id: f1_moist_gcls
+    illuminance:
+      id: f1_lux_gcls
+    conductivity:
+      id: f1_cond_gcls
+
+
+  # Зона 2 hhccjcy01
   - platform: xiaomi_hhccjcy01
     mac_address: $fl2_mac
-    id: fl2
+    id: fl2_01
     temperature:
-      id: f2_temp
-      name: "Temperature "
-      icon: mdi:thermometer
-      web_server:
-        sorting_group_id: group2
+      id: f2_temp_01
     moisture:
-      id: f2_moist
-      name: "Moisture "
-      icon: mdi:water-percent
-      web_server:
-        sorting_group_id: group2
+      id: f2_moist_01
     illuminance:
-      id: f2_lux
-      name: "Illuminance "
-      icon: mdi:white-balance-sunny
-      web_server:
-        sorting_group_id: group2
+      id: f2_lux_01
     conductivity:
-      id: f2_cond
-      name: "Soil Conductivity "
-      icon: mdi:flash
-      web_server:
-        sorting_group_id: group2
+      id: f2_cond_01
     battery_level:
-      id: f2_batt
-      name: "Battery "
-      icon: mdi:battery
-      web_server:
-        sorting_group_id: group2
-  # --- Flower 3 ---
+      id: f2_batt_01
+
+  # Зона 2 hhccjcy10
+  - platform: xiaomi_hhccjcy10
+    mac_address: $fl2_mac
+    id: fl2_10
+    temperature:
+      id: f2_temp_10
+    moisture:
+      id: f2_moist_10
+    illuminance:
+      id: f2_lux_10
+    conductivity:
+      id: f2_cond_10
+    battery_level:
+      id: f2_batt_10
+
+  # Зона 2 HHCCPOT002 — только влажность и проводимость
+  - platform: xiaomi_hhccpot002
+    mac_address: $fl2_mac
+    moisture:
+      id: f2_moist_002
+    conductivity:
+      id: f2_cond_002
+
+  # Зона 1 GCLS002 — без батареи
+  - platform: xiaomi_gcls002
+    mac_address: $fl2_mac
+    temperature:
+      id: f2_temp_gcls
+    moisture:
+      id: f2_moist_gcls
+    illuminance:
+      id: f2_lux_gcls
+    conductivity:
+      id: f2_cond_gcls
+
+
+  # Зона 3 hhccjcy01
   - platform: xiaomi_hhccjcy01
     mac_address: $fl3_mac
-    id: fl3
+    id: fl3_01
     temperature:
-      id: f3_temp
-      name: "Temperature  "
-      icon: mdi:thermometer
-      web_server:
-        sorting_group_id: group3
+      id: f3_temp_01
     moisture:
-      id: f3_moist
-      name: "Moisture  "
-      icon: mdi:water-percent
-      web_server:
-        sorting_group_id: group3
+      id: f3_moist_01
     illuminance:
-      id: f3_lux
-      name: "Illuminance  "
-      icon: mdi:white-balance-sunny
-      web_server:
-        sorting_group_id: group3
+      id: f3_lux_01
     conductivity:
-      id: f3_cond
-      name: "Soil Conductivity  "
-      icon: mdi:flash
-      web_server:
-        sorting_group_id: group3
+      id: f3_cond_01
     battery_level:
-      id: f3_batt
-      name: "Battery  "
-      icon: mdi:battery
-      web_server:
-        sorting_group_id: group3
-  # --- Flower 4 ---
+      id: f3_batt_01
+
+  # Зона 3 hhccjcy10
+  - platform: xiaomi_hhccjcy10
+    mac_address: $fl3_mac
+    id: fl3_10
+    temperature:
+      id: f3_temp_10
+    moisture:
+      id: f3_moist_10
+    illuminance:
+      id: f3_lux_10
+    conductivity:
+      id: f3_cond_10
+    battery_level:
+      id: f3_batt_10
+
+  # Зона 3 HHCCPOT002 — только влажность и проводимость
+  - platform: xiaomi_hhccpot002
+    mac_address: $fl3_mac
+    moisture:
+      id: f3_moist_002
+    conductivity:
+      id: f3_cond_002
+
+  # Зона 3 GCLS002 — без батареи
+  - platform: xiaomi_gcls002
+    mac_address: $fl3_mac
+    temperature:
+      id: f3_temp_gcls
+    moisture:
+      id: f3_moist_gcls
+    illuminance:
+      id: f3_lux_gcls
+    conductivity:
+      id: f3_cond_gcls
+
+
+  # Зона 4 hhccjcy01
   - platform: xiaomi_hhccjcy01
     mac_address: $fl4_mac
-    id: fl4
+    id: fl4_01
     temperature:
-      id: f4_temp
-      name: "Temperature   "
-      icon: mdi:thermometer
-      web_server:
-        sorting_group_id: group4
+      id: f4_temp_01
     moisture:
-      id: f4_moist
-      name: "Moisture   "
-      icon: mdi:water-percent
-      web_server:
-        sorting_group_id: group4
+      id: f4_moist_01
     illuminance:
-      id: f4_lux
-      name: "Illuminance   "
-      icon: mdi:white-balance-sunny
-      web_server:
-        sorting_group_id: group4
+      id: f4_lux_01
     conductivity:
-      id: f4_cond
-      name: "Soil Conductivity   "
-      icon: mdi:flash
-      web_server:
-        sorting_group_id: group4
+      id: f4_cond_01
     battery_level:
-      id: f4_batt
-      name: "Battery   "
-      icon: mdi:battery
-      web_server:
-        sorting_group_id: group4
+      id: f4_batt_01
+
+  # Зона 1 hhccjcy10
+  - platform: xiaomi_hhccjcy10
+    mac_address: $fl4_mac
+    id: fl4_10
+    temperature:
+      id: f4_temp_10
+    moisture:
+      id: f4_moist_10
+    illuminance:
+      id: f4_lux_10
+    conductivity:
+      id: f4_cond_10
+    battery_level:
+      id: f4_batt_10
+
+  # Зона 1 HHCCPOT002 — только влажность и проводимость
+  - platform: xiaomi_hhccpot002
+    mac_address: $fl4_mac
+    moisture:
+      id: f4_moist_002
+    conductivity:
+      id: f4_cond_002
+
+  # Зона 1 GCLS002 — без батареи
+  - platform: xiaomi_gcls002
+    mac_address: $fl4_mac
+    temperature:
+      id: f4_temp_gcls
+    moisture:
+      id: f4_moist_gcls
+    illuminance:
+      id: f4_lux_gcls
+    conductivity:
+      id: f4_cond_gcls
 
 
+# =========================
+# 🌸 FLOWER 1 — универсальный шаблон
+# =========================
+  - platform: template
+    name: "Temperature Zone 1"
+    id: f1_temp
+    icon: mdi:thermometer
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    lambda: |-
+      if (id(flower1_sensor_model) == 1) return id(f1_temp_01).state;
+      else if (id(flower1_sensor_model) == 2) return id(f1_temp_10).state;
+      else if (id(flower1_sensor_model) == 3) return NAN;
+      else if (id(flower1_sensor_model) == 4) return id(f1_temp_gcls).state;
+      else return NAN;
+    web_server:
+      sorting_group_id: group1
+
+  - platform: template
+    name: "Moisture Zone 1"
+    id: f1_moist
+    icon: mdi:water-percent
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    lambda: |-
+      if (id(flower1_sensor_model) == 1) return id(f1_moist_01).state;
+      else if (id(flower1_sensor_model) == 2) return id(f1_moist_10).state;
+      else if (id(flower1_sensor_model) == 3) return id(f1_moist_002).state;
+      else if (id(flower1_sensor_model) == 4) return id(f1_moist_gcls).state;
+      else return NAN;
+    web_server:
+      sorting_group_id: group1
+
+  - platform: template
+    name: "Illuminance Zone 1"
+    id: f1_light
+    icon: mdi:white-balance-sunny
+    unit_of_measurement: "lx"
+    accuracy_decimals: 0
+    lambda: |-
+      if (id(flower1_sensor_model) == 1) return id(f1_lux_01).state;
+      else if (id(flower1_sensor_model) == 2) return id(f1_lux_10).state;
+      else if (id(flower1_sensor_model) == 3) return NAN;
+      else if (id(flower1_sensor_model) == 4) return id(f1_lux_gcls).state;
+      else return NAN;
+    web_server:
+      sorting_group_id: group1
+
+  - platform: template
+    name: "Soil Conductivity Zone 1"
+    id: f1_cond
+    icon: mdi:flash
+    unit_of_measurement: "μS/cm"
+    accuracy_decimals: 0
+    lambda: |-
+      if (id(flower1_sensor_model) == 1) return id(f1_cond_01).state;
+      else if (id(flower1_sensor_model) == 2) return id(f1_cond_10).state;
+      else if (id(flower1_sensor_model) == 3) return id(f1_cond_002).state;
+      else if (id(flower1_sensor_model) == 4) return id(f1_cond_gcls).state;
+      else return NAN;
+    web_server:
+      sorting_group_id: group1
+
+  - platform: template
+    name: "Battery Zone 1"
+    id: f1_batt
+    icon: mdi:battery
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    lambda: |-
+      if (id(flower1_sensor_model) == 1) return id(f1_batt_01).state;
+      else if (id(flower1_sensor_model) == 2) return id(f1_batt_10).state;
+      else if (id(flower1_sensor_model) == 3) return NAN;
+      else if (id(flower1_sensor_model) == 4) return NAN;
+      else return NAN;
+    web_server:
+      sorting_group_id: group1
+
+
+# =========================
+# 🌿 FLOWER 2 — универсальный шаблон
+# =========================
+  - platform: template
+    name: "Temperature Zone 2"
+    id: f2_temp
+    icon: mdi:thermometer
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    lambda: |-
+      if (id(flower2_sensor_model) == 1) return id(f2_temp_01).state;
+      else if (id(flower2_sensor_model) == 2) return id(f2_temp_10).state;
+      else if (id(flower2_sensor_model) == 3) return NAN;
+      else if (id(flower2_sensor_model) == 4) return id(f2_temp_gcls).state;
+      else return NAN;
+    web_server:
+      sorting_group_id: group2
+
+  - platform: template
+    name: "Moisture Zone 2"
+    id: f2_moist
+    icon: mdi:water-percent
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    lambda: |-
+      if (id(flower2_sensor_model) == 1) return id(f2_moist_01).state;
+      else if (id(flower2_sensor_model) == 2) return id(f2_moist_10).state;
+      else if (id(flower2_sensor_model) == 3) return id(f2_moist_002).state;
+      else if (id(flower2_sensor_model) == 4) return id(f2_moist_gcls).state;
+      else return NAN;
+    web_server:
+      sorting_group_id: group2
+
+  - platform: template
+    name: "Illuminance Zone 2"
+    id: f2_light
+    icon: mdi:white-balance-sunny
+    unit_of_measurement: "lx"
+    accuracy_decimals: 0
+    lambda: |-
+      if (id(flower2_sensor_model) == 1) return id(f2_lux_01).state;
+      else if (id(flower2_sensor_model) == 2) return id(f2_lux_10).state;
+      else if (id(flower2_sensor_model) == 3) return NAN;
+      else if (id(flower2_sensor_model) == 4) return id(f2_lux_gcls).state;
+      else return NAN;
+    web_server:
+      sorting_group_id: group2
+
+  - platform: template
+    name: "Soil Conductivity Zone 2"
+    id: f2_cond
+    icon: mdi:flash
+    unit_of_measurement: "μS/cm"
+    accuracy_decimals: 0
+    lambda: |-
+      if (id(flower2_sensor_model) == 1) return id(f2_cond_01).state;
+      else if (id(flower2_sensor_model) == 2) return id(f2_cond_10).state;
+      else if (id(flower2_sensor_model) == 3) return id(f2_cond_002).state;
+      else if (id(flower2_sensor_model) == 4) return id(f2_cond_gcls).state;
+      else return NAN;
+    web_server:
+      sorting_group_id: group2
+
+  - platform: template
+    name: "Battery Zone 2"
+    id: f2_batt
+    icon: mdi:battery
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    lambda: |-
+      if (id(flower2_sensor_model) == 1) return id(f2_batt_01).state;
+      else if (id(flower2_sensor_model) == 2) return id(f2_batt_10).state;
+      else if (id(flower2_sensor_model) == 3) return NAN;
+      else if (id(flower2_sensor_model) == 4) return NAN;
+      else return NAN;
+    web_server:
+      sorting_group_id: group2
+
+
+# =========================
+# 🌼 FLOWER 3 — универсальный шаблон
+# =========================
+  - platform: template
+    name: "Temperature Zone 3"
+    id: f3_temp
+    icon: mdi:thermometer
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    lambda: |-
+      if (id(flower3_sensor_model) == 1) return id(f3_temp_01).state;
+      else if (id(flower3_sensor_model) == 2) return id(f3_temp_10).state;
+      else if (id(flower3_sensor_model) == 3) return NAN;
+      else if (id(flower3_sensor_model) == 4) return id(f3_temp_gcls).state;
+      else return NAN;
+    web_server:
+      sorting_group_id: group3
+
+  - platform: template
+    name: "Moisture Zone 3"
+    id: f3_moist
+    icon: mdi:water-percent
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    lambda: |-
+      if (id(flower3_sensor_model) == 1) return id(f3_moist_01).state;
+      else if (id(flower3_sensor_model) == 2) return id(f3_moist_10).state;
+      else if (id(flower3_sensor_model) == 3) return id(f3_moist_002).state;
+      else if (id(flower3_sensor_model) == 4) return id(f3_moist_gcls).state;
+      else return NAN;
+    web_server:
+      sorting_group_id: group3
+
+  - platform: template
+    name: "Illuminance Zone 3"
+    id: f3_light
+    icon: mdi:white-balance-sunny
+    unit_of_measurement: "lx"
+    accuracy_decimals: 0
+    lambda: |-
+      if (id(flower3_sensor_model) == 1) return id(f3_lux_01).state;
+      else if (id(flower3_sensor_model) == 2) return id(f3_lux_10).state;
+      else if (id(flower3_sensor_model) == 3) return NAN;
+      else if (id(flower3_sensor_model) == 4) return id(f3_lux_gcls).state;
+      else return NAN;
+    web_server:
+      sorting_group_id: group3
+
+  - platform: template
+    name: "Soil Conductivity Zone 3"
+    id: f3_cond
+    icon: mdi:flash
+    unit_of_measurement: "μS/cm"
+    accuracy_decimals: 0
+    lambda: |-
+      if (id(flower3_sensor_model) == 1) return id(f3_cond_01).state;
+      else if (id(flower3_sensor_model) == 2) return id(f3_cond_10).state;
+      else if (id(flower3_sensor_model) == 3) return id(f3_cond_002).state;
+      else if (id(flower3_sensor_model) == 4) return id(f3_cond_gcls).state;
+      else return NAN;
+    web_server:
+      sorting_group_id: group3
+
+  - platform: template
+    name: "Battery Zone 3"
+    id: f3_batt
+    icon: mdi:battery
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    lambda: |-
+      if (id(flower3_sensor_model) == 1) return id(f3_batt_01).state;
+      else if (id(flower3_sensor_model) == 2) return id(f3_batt_10).state;
+      else if (id(flower3_sensor_model) == 3) return NAN;
+      else if (id(flower3_sensor_model) == 4) return NAN;
+      else return NAN;
+    web_server:
+      sorting_group_id: group3
+
+
+# =========================
+# 🌺 FLOWER 4 — универсальный шаблон
+# =========================
+  - platform: template
+    name: "Temperature Zone 4"
+    id: f4_temp
+    icon: mdi:thermometer
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    lambda: |-
+      if (id(flower4_sensor_model) == 1) return id(f4_temp_01).state;
+      else if (id(flower4_sensor_model) == 2) return id(f4_temp_10).state;
+      else if (id(flower4_sensor_model) == 3) return NAN;
+      else if (id(flower4_sensor_model) == 4) return id(f4_temp_gcls).state;
+      else return NAN;
+    web_server:
+      sorting_group_id: group4
+
+  - platform: template
+    name: "Moisture Zone 4"
+    id: f4_moist
+    icon: mdi:water-percent
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    lambda: |-
+      if (id(flower4_sensor_model) == 1) return id(f4_moist_01).state;
+      else if (id(flower4_sensor_model) == 2) return id(f4_moist_10).state;
+      else if (id(flower4_sensor_model) == 3) return id(f4_moist_002).state;
+      else if (id(flower4_sensor_model) == 4) return id(f4_moist_gcls).state;
+      else return NAN;
+    web_server:
+      sorting_group_id: group4
+
+  - platform: template
+    name: "Illuminance Zone 4"
+    id: f4_light
+    icon: mdi:white-balance-sunny
+    unit_of_measurement: "lx"
+    accuracy_decimals: 0
+    lambda: |-
+      if (id(flower4_sensor_model) == 1) return id(f4_lux_01).state;
+      else if (id(flower4_sensor_model) == 2) return id(f4_lux_10).state;
+      else if (id(flower4_sensor_model) == 3) return NAN;
+      else if (id(flower4_sensor_model) == 4) return id(f4_lux_gcls).state;
+      else return NAN;
+    web_server:
+      sorting_group_id: group4
+
+  - platform: template
+    name: "Soil Conductivity Zone 4"
+    id: f4_cond
+    icon: mdi:flash
+    unit_of_measurement: "μS/cm"
+    accuracy_decimals: 0
+    lambda: |-
+      if (id(flower4_sensor_model) == 1) return id(f4_cond_01).state;
+      else if (id(flower4_sensor_model) == 2) return id(f4_cond_10).state;
+      else if (id(flower4_sensor_model) == 3) return id(f4_cond_002).state;
+      else if (id(flower4_sensor_model) == 4) return id(f4_cond_gcls).state;
+      else return NAN;
+    web_server:
+      sorting_group_id: group4
+
+  - platform: template
+    name: "Battery Zone 4"
+    id: f4_batt
+    icon: mdi:battery
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    lambda: |-
+      if (id(flower4_sensor_model) == 1) return id(f4_batt_01).state;
+      else if (id(flower4_sensor_model) == 2) return id(f4_batt_10).state;
+      else if (id(flower4_sensor_model) == 3) return NAN;
+      else if (id(flower4_sensor_model) == 4) return NAN;
+      else return NAN;
+    web_server:
+      sorting_group_id: group4
 
 
 
