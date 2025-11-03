@@ -227,37 +227,38 @@ web_server:
   port: 80
   local: True  
   version: 3
+  css_include: www/my.css
 #  log: False
   sorting_groups:
     - id: group1
-      name: "🌿 Flower1"
+      name: "🌸 Цветок 1"
       sorting_weight: 10
     - id: group2
-      name: "🌿 Flower2"
+      name: "🪴 Цветок 2"
       sorting_weight: 20
     - id: group3
-      name: "🌿 Flower3"
+      name: "🌻 Цветок 3"
       sorting_weight: 30
     - id: group4
-      name: "🌿 Flower4"
+      name: "🌺 Цветок 4"
       sorting_weight: 40
     - id: group5
-      name: "⚙️ Setting"
+      name: "⚙️ Настройки общие"
       sorting_weight: 60
     - id: group6
       name: "📊 Sensor"
       sorting_weight: 45
     - id: group7
-      name: "⚙️ Flower1 Setting"
+      name: "⚙️🌸 Настройки Цветок 1"
       sorting_weight: 46
     - id: group8
-      name: "⚙️ Flower2 Setting"
+      name: "⚙️🪴 Настройки Цветок 2"
       sorting_weight: 47
     - id: group9
-      name: "⚙️ Flower3 Setting"
+      name: "⚙️🌻 Настройки Цветок 3"
       sorting_weight: 48
     - id: group10
-      name: "⚙️ Flower4 Setting"
+      name: "⚙️🌺 Настройки Цветок 4"
       sorting_weight: 49
   
 
@@ -333,7 +334,7 @@ text:
       sorting_group_id: group7
 
   - platform: template
-    name: "MAC "
+    name: "MАC"
     id: flower2_mac_text
     mode: text
     icon: mdi:bluetooth
@@ -351,7 +352,7 @@ text:
       sorting_group_id: group8
 
   - platform: template
-    name: "MAC  "
+    name: "MAС"
     id: flower3_mac_text
     mode: text
     icon: mdi:bluetooth
@@ -369,7 +370,7 @@ text:
       sorting_group_id: group9
 
   - platform: template
-    name: "MAC   "
+    name: "MАС"
     id: flower4_mac_text
     mode: text
     icon: mdi:bluetooth
@@ -518,7 +519,7 @@ number:
 
   # Поддерживаемая влажность почвы для каждой зоны
   - platform: template
-    name: "Поддерживать влажность"
+    name: "Минимальная влажность"
     id: set_moisture_slider_1
     optimistic: true
     restore_value: true
@@ -535,7 +536,7 @@ number:
           ESP_LOGI("pump", "Установлено поддерживать влажность Зона 1: %d процентов", (int)x);
 
   - platform: template
-    name: "Поддерживaть влажность"
+    name: "Минимальнaя влажность"
     id: set_moisture_slider_2
     optimistic: true
     restore_value: true
@@ -552,7 +553,7 @@ number:
           ESP_LOGI("pump", "Установлено поддерживать влажность Зона 2: %d процентов", (int)x);
 
   - platform: template
-    name: "Поддерживать влaжность"
+    name: "Минимальная влaжность"
     id: set_moisture_slider_3
     optimistic: true
     restore_value: true
@@ -569,7 +570,7 @@ number:
           ESP_LOGI("pump", "Установлено поддерживать влажность Зона 3: %d процентов", (int)x);
 
   - platform: template
-    name: "Пoддерживать влажность"
+    name: "Минимaльная влажность"
     id: set_moisture_slider_4
     optimistic: true
     restore_value: true
@@ -589,8 +590,9 @@ number:
   - platform: template
     name: "Расстояние полного бака"
     id: full_tank_distance
+    icon: mdi:arrow-expand-vertical
     min_value: 0
-    max_value: 1000
+    max_value: 2000
     step: 1
     unit_of_measurement: "mm"
     optimistic: true
@@ -602,8 +604,9 @@ number:
   - platform: template
     name: "Расстояние пустого бакa"
     id: empty_tank_distance
+    icon: mdi:arrow-collapse-vertical
     min_value: 0
-    max_value: 1000
+    max_value: 2000
     step: 1
     unit_of_measurement: "mm"
     optimistic: true
@@ -617,6 +620,7 @@ select:
   - platform: template
     name: "Модель датчика"
     id: flower1_sensor_model_select
+    icon: mdi:chip
     options:
       - "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
       - "HHCCJCY10 Xiaomi MiFlora (Pink version)"
@@ -645,6 +649,7 @@ select:
   - platform: template
     name: "Модель датчикa"
     id: flower2_sensor_model_select
+    icon: mdi:chip
     options:
       - "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
       - "HHCCJCY10 Xiaomi MiFlora (Pink version)"
@@ -673,6 +678,7 @@ select:
   - platform: template
     name: "Модель дaтчика"
     id: flower3_sensor_model_select
+    icon: mdi:chip
     options:
       - "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
       - "HHCCJCY10 Xiaomi MiFlora (Pink version)"
@@ -701,6 +707,7 @@ select:
   - platform: template
     name: "Модель дaтчикa"
     id: flower4_sensor_model_select
+    icon: mdi:chip
     options:
       - "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
       - "HHCCJCY10 Xiaomi MiFlora (Pink version)"
@@ -733,7 +740,7 @@ sensor:
   - platform: ultrasonic
     trigger_pin: $gpio_trigger_pin
     echo_pin: $gpio_echo_pin
-    name: 'Ultrasonic Sensor'
+    #name: 'Ultrasonic Sensor'
     id: ultrasonic_sensor
     update_interval: 1s
     accuracy_decimals: 3
@@ -741,7 +748,7 @@ sensor:
     web_server: 
       sorting_group_id: group6
   - platform: template
-    name: "Ultrasonic Sensor (mm)"
+    #name: "Ultrasonic Sensor (mm)"
     id: ultrasonic_sensor_mm
     unit_of_measurement: "mm"
     accuracy_decimals: 0
@@ -757,6 +764,7 @@ sensor:
   - platform: template
     name: "Уровень воды в баке"
     id: water_level_percent
+    icon: mdi:car-coolant-level
     unit_of_measurement: "%"
     accuracy_decimals: 0
     update_interval: 1s
@@ -991,11 +999,9 @@ sensor:
       id: f4_cond_gcls
 
 
-# =========================
-# 🌸 FLOWER 1 — универсальный шаблон
-# =========================
+# 🌸 FLOWER 1
   - platform: template
-    name: "Temperature Zone 1"
+    name: "Температура"
     id: f1_temp
     icon: mdi:thermometer
     unit_of_measurement: "°C"
@@ -1007,10 +1013,10 @@ sensor:
       else if (id(flower1_sensor_model) == 4) return id(f1_temp_gcls).state;
       else return NAN;
     web_server:
+      sorting_weight: 1
       sorting_group_id: group1
-
   - platform: template
-    name: "Moisture Zone 1"
+    name: "Влажность почвы"
     id: f1_moist
     icon: mdi:water-percent
     unit_of_measurement: "%"
@@ -1022,10 +1028,10 @@ sensor:
       else if (id(flower1_sensor_model) == 4) return id(f1_moist_gcls).state;
       else return NAN;
     web_server:
+      sorting_weight: 2
       sorting_group_id: group1
-
   - platform: template
-    name: "Illuminance Zone 1"
+    name: "Освещенность"
     id: f1_light
     icon: mdi:white-balance-sunny
     unit_of_measurement: "lx"
@@ -1037,10 +1043,10 @@ sensor:
       else if (id(flower1_sensor_model) == 4) return id(f1_lux_gcls).state;
       else return NAN;
     web_server:
+      sorting_weight: 3
       sorting_group_id: group1
-
   - platform: template
-    name: "Soil Conductivity Zone 1"
+    name: "Питательнoсть"
     id: f1_cond
     icon: mdi:flash
     unit_of_measurement: "μS/cm"
@@ -1052,10 +1058,10 @@ sensor:
       else if (id(flower1_sensor_model) == 4) return id(f1_cond_gcls).state;
       else return NAN;
     web_server:
+      sorting_weight: 4
       sorting_group_id: group1
-
   - platform: template
-    name: "Battery Zone 1"
+    name: "Батарея"
     id: f1_batt
     icon: mdi:battery
     unit_of_measurement: "%"
@@ -1067,14 +1073,12 @@ sensor:
       else if (id(flower1_sensor_model) == 4) return NAN;
       else return NAN;
     web_server:
+      sorting_weight: 5
       sorting_group_id: group1
 
-
-# =========================
-# 🌿 FLOWER 2 — универсальный шаблон
-# =========================
+# 🌿 FLOWER 2
   - platform: template
-    name: "Temperature Zone 2"
+    name: "Температурa"
     id: f2_temp
     icon: mdi:thermometer
     unit_of_measurement: "°C"
@@ -1086,10 +1090,11 @@ sensor:
       else if (id(flower2_sensor_model) == 4) return id(f2_temp_gcls).state;
       else return NAN;
     web_server:
+      sorting_weight: 1
       sorting_group_id: group2
 
   - platform: template
-    name: "Moisture Zone 2"
+    name: "Влaжность почвы"
     id: f2_moist
     icon: mdi:water-percent
     unit_of_measurement: "%"
@@ -1101,10 +1106,11 @@ sensor:
       else if (id(flower2_sensor_model) == 4) return id(f2_moist_gcls).state;
       else return NAN;
     web_server:
+      sorting_weight: 2
       sorting_group_id: group2
 
   - platform: template
-    name: "Illuminance Zone 2"
+    name: "Освещеннoсть"
     id: f2_light
     icon: mdi:white-balance-sunny
     unit_of_measurement: "lx"
@@ -1116,10 +1122,11 @@ sensor:
       else if (id(flower2_sensor_model) == 4) return id(f2_lux_gcls).state;
       else return NAN;
     web_server:
+      sorting_weight: 3
       sorting_group_id: group2
 
   - platform: template
-    name: "Soil Conductivity Zone 2"
+    name: "Питaтельность"
     id: f2_cond
     icon: mdi:flash
     unit_of_measurement: "μS/cm"
@@ -1131,10 +1138,11 @@ sensor:
       else if (id(flower2_sensor_model) == 4) return id(f2_cond_gcls).state;
       else return NAN;
     web_server:
+      sorting_weight: 4
       sorting_group_id: group2
 
   - platform: template
-    name: "Battery Zone 2"
+    name: "Бaтарея"
     id: f2_batt
     icon: mdi:battery
     unit_of_measurement: "%"
@@ -1146,14 +1154,12 @@ sensor:
       else if (id(flower2_sensor_model) == 4) return NAN;
       else return NAN;
     web_server:
+      sorting_weight: 5
       sorting_group_id: group2
 
-
-# =========================
 # 🌼 FLOWER 3 — универсальный шаблон
-# =========================
   - platform: template
-    name: "Temperature Zone 3"
+    name: "Темперaтура"
     id: f3_temp
     icon: mdi:thermometer
     unit_of_measurement: "°C"
@@ -1165,10 +1171,11 @@ sensor:
       else if (id(flower3_sensor_model) == 4) return id(f3_temp_gcls).state;
       else return NAN;
     web_server:
+      sorting_weight: 1
       sorting_group_id: group3
 
   - platform: template
-    name: "Moisture Zone 3"
+    name: "Влажнoсть почвы"
     id: f3_moist
     icon: mdi:water-percent
     unit_of_measurement: "%"
@@ -1180,10 +1187,11 @@ sensor:
       else if (id(flower3_sensor_model) == 4) return id(f3_moist_gcls).state;
       else return NAN;
     web_server:
+      sorting_weight: 2
       sorting_group_id: group3
 
   - platform: template
-    name: "Illuminance Zone 3"
+    name: "Освeщенность"
     id: f3_light
     icon: mdi:white-balance-sunny
     unit_of_measurement: "lx"
@@ -1195,10 +1203,11 @@ sensor:
       else if (id(flower3_sensor_model) == 4) return id(f3_lux_gcls).state;
       else return NAN;
     web_server:
+      sorting_weight: 3
       sorting_group_id: group3
 
   - platform: template
-    name: "Soil Conductivity Zone 3"
+    name: "Питательность"
     id: f3_cond
     icon: mdi:flash
     unit_of_measurement: "μS/cm"
@@ -1210,10 +1219,11 @@ sensor:
       else if (id(flower3_sensor_model) == 4) return id(f3_cond_gcls).state;
       else return NAN;
     web_server:
+      sorting_weight: 4
       sorting_group_id: group3
 
   - platform: template
-    name: "Battery Zone 3"
+    name: "Батaрея"
     id: f3_batt
     icon: mdi:battery
     unit_of_measurement: "%"
@@ -1225,14 +1235,12 @@ sensor:
       else if (id(flower3_sensor_model) == 4) return NAN;
       else return NAN;
     web_server:
+      sorting_weight: 5
       sorting_group_id: group3
 
-
-# =========================
-# 🌺 FLOWER 4 — универсальный шаблон
-# =========================
+# 🌺 FLOWER 4
   - platform: template
-    name: "Temperature Zone 4"
+    name: "Темпeрaтура"
     id: f4_temp
     icon: mdi:thermometer
     unit_of_measurement: "°C"
@@ -1244,10 +1252,11 @@ sensor:
       else if (id(flower4_sensor_model) == 4) return id(f4_temp_gcls).state;
       else return NAN;
     web_server:
+      sorting_weight: 1
       sorting_group_id: group4
 
   - platform: template
-    name: "Moisture Zone 4"
+    name: "Влaжность пoчвы"
     id: f4_moist
     icon: mdi:water-percent
     unit_of_measurement: "%"
@@ -1259,10 +1268,11 @@ sensor:
       else if (id(flower4_sensor_model) == 4) return id(f4_moist_gcls).state;
       else return NAN;
     web_server:
+      sorting_weight: 2
       sorting_group_id: group4
 
   - platform: template
-    name: "Illuminance Zone 4"
+    name: "Освещeнность"
     id: f4_light
     icon: mdi:white-balance-sunny
     unit_of_measurement: "lx"
@@ -1274,10 +1284,11 @@ sensor:
       else if (id(flower4_sensor_model) == 4) return id(f4_lux_gcls).state;
       else return NAN;
     web_server:
+      sorting_weight: 3
       sorting_group_id: group4
 
   - platform: template
-    name: "Soil Conductivity Zone 4"
+    name: "Питатeльность"
     id: f4_cond
     icon: mdi:flash
     unit_of_measurement: "μS/cm"
@@ -1289,10 +1300,11 @@ sensor:
       else if (id(flower4_sensor_model) == 4) return id(f4_cond_gcls).state;
       else return NAN;
     web_server:
+      sorting_weight: 4
       sorting_group_id: group4
 
   - platform: template
-    name: "Battery Zone 4"
+    name: "Батaрeя"
     id: f4_batt
     icon: mdi:battery
     unit_of_measurement: "%"
@@ -1304,20 +1316,45 @@ sensor:
       else if (id(flower4_sensor_model) == 4) return NAN;
       else return NAN;
     web_server:
+      sorting_weight: 5
       sorting_group_id: group4
-
-
-
+  - platform: uptime
+    name: "Uptime s"
+    icon: mdi:timer
+    id: uptime_s
+    update_interval: 60s
+    web_server:
+      sorting_group_id: group6
+  - platform: wifi_signal
+    name: "WiFi Signal dB"
+    id: wifi_signal_db
+    update_interval: 60s
+    entity_category: "diagnostic"
+    icon: mdi:wifi
+    web_server:
+      sorting_group_id: group6
+  - platform: copy
+    source_id: wifi_signal_db
+    name: "WiFi Signal Percent"
+    filters:
+      - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
+    unit_of_measurement: " %"
+    entity_category: "diagnostic"
+    icon: mdi:wifi
+    device_class: ""
+    web_server:
+      sorting_group_id: group6
 
 
 switch:
   - platform: gpio
     pin: $gpio_relay1
-    name: "помпа"
+    name: "Помпа"
     id: relay_1
     icon: "mdi:pump"
     restore_mode: RESTORE_DEFAULT_OFF
     web_server:
+      sorting_weight: 7
       sorting_group_id: group1
     on_turn_on:
       - lambda: |-
@@ -1326,11 +1363,12 @@ switch:
 
   - platform: gpio
     pin: $gpio_relay2
-    name: "пoмпа"
+    name: "Пoмпа"
     id: relay_2
     icon: "mdi:pump"
     restore_mode: RESTORE_DEFAULT_OFF
     web_server:
+      sorting_weight: 7
       sorting_group_id: group2
     on_turn_on:
       - lambda: |-
@@ -1339,11 +1377,12 @@ switch:
 
   - platform: gpio
     pin: $gpio_relay3
-    name: "помпa"
+    name: "Помпa"
     id: relay_3
     icon: "mdi:pump"
     restore_mode: RESTORE_DEFAULT_OFF
     web_server:
+      sorting_weight: 7
       sorting_group_id: group3
     on_turn_on:
       - lambda: |-
@@ -1352,11 +1391,12 @@ switch:
 
   - platform: gpio
     pin: $gpio_relay4
-    name: "пoмпa"
+    name: "Пoмпa"
     id: relay_4
     icon: "mdi:pump"
     restore_mode: RESTORE_DEFAULT_OFF
     web_server:
+      sorting_weight: 7
       sorting_group_id: group4
     on_turn_on:
       - lambda: |-
@@ -1366,6 +1406,7 @@ switch:
   - platform: template
     name: "Расписание включено"
     id: flower1_schedule_enable
+    icon: mdi:calendar-clock
     web_server:
       sorting_group_id: group7
     optimistic: true
@@ -1378,6 +1419,7 @@ switch:
   - platform: template
     name: "Расписание включенo"
     id: flower2_schedule_enable
+    icon: mdi:calendar-clock
     web_server:
       sorting_group_id: group8
     optimistic: true
@@ -1390,6 +1432,7 @@ switch:
   - platform: template
     name: "Рaсписание включено"
     id: flower3_schedule_enable
+    icon: mdi:calendar-clock
     web_server:
       sorting_group_id: group9
     optimistic: true
@@ -1402,6 +1445,7 @@ switch:
   - platform: template
     name: "Расписaние включено"
     id: flower4_schedule_enable
+    icon: mdi:calendar-clock
     web_server:
       sorting_group_id: group10
     optimistic: true
@@ -1410,7 +1454,10 @@ switch:
       - logger.log: "Расписание Flower4 включено"
     turn_off_action:
       - logger.log: "Расписание Flower4 выключено"
-
+  - platform: restart
+    name: "Перезагрузить"    
+    web_server:
+      sorting_group_id: group5
 
 text_sensor:
   - platform: template
@@ -1418,25 +1465,55 @@ text_sensor:
     id: last_watering_sensor_1
     icon: mdi:clock
     web_server:
+      sorting_weight: 6
       sorting_group_id: group1
   - platform: template
     name: "Последний пoлив"
     id: last_watering_sensor_2
     icon: mdi:clock
     web_server:
+      sorting_weight: 6
       sorting_group_id: group2
   - platform: template
     name: "Пoследний полив"
     id: last_watering_sensor_3
     icon: mdi:clock
     web_server:
+      sorting_weight: 6
       sorting_group_id: group3
   - platform: template
     name: "Пoследний пoлив"
     id: last_watering_sensor_4
     icon: mdi:clock
     web_server:
+      sorting_weight: 6
       sorting_group_id: group4
+  - platform: template
+    name: "Uptime"
+    lambda: |-
+      uint32_t dur = id(uptime_s).state;
+      int dys = 0;
+      int hrs = 0;
+      int mnts = 0;
+      if (dur > 86399) {
+        dys = trunc(dur / 86400);
+        dur = dur - (dys * 86400);
+      }
+      if (dur > 3599) {
+        hrs = trunc(dur / 3600);
+        dur = dur - (hrs * 3600);
+      }
+      if (dur > 59) {
+        mnts = trunc(dur / 60);
+        dur = dur - (mnts * 60);
+      }
+      char buffer[17];
+      sprintf(buffer, "%ud %02uh %02um %02us", dys, hrs, mnts, dur);
+      return {buffer};
+    icon: mdi:clock-start
+    update_interval: 60s
+    web_server:
+      sorting_group_id: group6
 
 time:
   - platform: sntp
