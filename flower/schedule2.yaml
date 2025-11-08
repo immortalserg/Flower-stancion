@@ -1,0 +1,369 @@
+
+globals:
+  - id: flower5_schedule
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 100
+    initial_value: '"08:40"'
+  - id: flower6_schedule
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 100
+    initial_value: '"08:50"'
+  - id: flower7_schedule
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 100
+    initial_value: '"09:00"'
+  - id: flower8_schedule
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 100
+    initial_value: '"09:10"'
+  - id: pump_run_time_5
+    type: int
+    restore_value: yes
+    initial_value: '10'
+  - id: pump_run_time_6
+    type: int
+    restore_value: yes
+    initial_value: '10'
+  - id: pump_run_time_7
+    type: int
+    restore_value: yes
+    initial_value: '10'
+  - id: pump_run_time_8
+    type: int
+    restore_value: yes
+    initial_value: '10'
+  - id: set_moisture_5
+    type: int
+    restore_value: yes
+    initial_value: '50'
+  - id: set_moisture_6
+    type: int
+    restore_value: yes
+    initial_value: '50'
+  - id: set_moisture_7
+    type: int
+    restore_value: yes
+    initial_value: '50'
+  - id: set_moisture_8
+    type: int
+    restore_value: yes
+    initial_value: '50'
+
+esphome:
+  on_boot:
+    priority: -10
+    then:
+      - lambda: |-
+          id(pump_time_slider_5).publish_state(id(pump_run_time_5));
+          id(pump_time_slider_6).publish_state(id(pump_run_time_6));
+          id(pump_time_slider_7).publish_state(id(pump_run_time_7));
+          id(pump_time_slider_8).publish_state(id(pump_run_time_8));
+
+          id(set_moisture_slider_1).publish_state(id(set_moisture_5));
+          id(set_moisture_slider_2).publish_state(id(set_moisture_6));
+          id(set_moisture_slider_3).publish_state(id(set_moisture_7));
+          id(set_moisture_slider_4).publish_state(id(set_moisture_8));
+
+
+
+text:
+  - platform: template
+    name: $schedule 5
+    id: flower5_schedule_text
+    icon: "mdi:calendar-clock"
+    mode: text
+    lambda: |-
+      return id(flower5_schedule);
+    set_action:
+      then:
+        - lambda: |-
+            id(flower5_schedule) = x;
+    web_server:
+      sorting_group_id: group25
+
+  - platform: template
+    name: $schedule 6
+    id: flower6_schedule_text
+    icon: "mdi:calendar-clock"
+    mode: text
+    lambda: |-
+      return id(flower6_schedule);
+    set_action:
+      then:
+        - lambda: |-
+            id(flower6_schedule) = x;
+    web_server:
+      sorting_group_id: group26
+
+  - platform: template
+    name: $schedule 7
+    id: flower7_schedule_text
+    icon: "mdi:calendar-clock"
+    mode: text
+    lambda: |-
+      return id(flower7_schedule);
+    set_action:
+      then:
+        - lambda: |-
+            id(flower7_schedule) = x;
+    web_server:
+      sorting_group_id: group27
+
+  - platform: template
+    name: $schedule 8
+    id: flower8_schedule_text
+    icon: "mdi:calendar-clock"
+    mode: text
+    lambda: |-
+      return id(flower8_schedule);
+    set_action:
+      then:
+        - lambda: |-
+            id(flower8_schedule) = x;
+    web_server:
+      sorting_group_id: group28
+
+
+number:
+  - platform: template
+    name: $pump_time 5
+    id: pump_time_slider_5
+    optimistic: true
+    restore_value: true
+    min_value: 1
+    max_value: $max_value_time
+    step: 1
+    unit_of_measurement: "s"
+    icon: mdi:timer-outline
+    web_server:
+      sorting_group_id: group25
+    set_action:
+      - lambda: |-
+          id(pump_run_time_5) = x;
+
+  - platform: template
+    name: $pump_time 6
+    id: pump_time_slider_6
+    optimistic: true
+    restore_value: true
+    min_value: 1
+    max_value: $max_value_time
+    step: 1
+    unit_of_measurement: "s"
+    icon: mdi:timer-outline
+    web_server:
+      sorting_group_id: group26
+    set_action:
+      - lambda: |-
+          id(pump_run_time_6) = x;
+
+  - platform: template
+    name: $pump_time 7
+    id: pump_time_slider_7
+    optimistic: true
+    restore_value: true
+    min_value: 1
+    max_value: $max_value_time
+    step: 1
+    unit_of_measurement: "s"
+    icon: mdi:timer-outline
+    web_server:
+      sorting_group_id: group27
+    set_action:
+      - lambda: |-
+          id(pump_run_time_7) = x;
+
+  - platform: template
+    name: $pump_time 8
+    id: pump_time_slider_8
+    optimistic: true
+    restore_value: true
+    min_value: 1
+    max_value: $max_value_time
+    step: 1
+    unit_of_measurement: "s"
+    icon: mdi:timer-outline
+    web_server:
+      sorting_group_id: group28
+    set_action:
+      - lambda: |-
+          id(pump_run_time_8) = x;
+
+  - platform: template
+    name: $water_min 5
+    id: set_moisture_slider_5
+    optimistic: true
+    restore_value: true
+    min_value: $min_value_water
+    max_value: $max_value_water
+    step: 1
+    unit_of_measurement: "%"
+    icon: mdi:water-percent
+    web_server:
+      sorting_group_id: group25
+    set_action:
+      - lambda: |-
+          id(set_moisture_1) = x;
+
+  - platform: template
+    name: $water_min 6
+    id: set_moisture_slider_6
+    optimistic: true
+    restore_value: true
+    min_value: $min_value_water
+    max_value: $max_value_water
+    step: 1
+    unit_of_measurement: "%"
+    icon: mdi:water-percent
+    web_server:
+      sorting_group_id: group26
+    set_action:
+      - lambda: |-
+          id(set_moisture_6) = x;
+
+  - platform: template
+    name: $water_min 7
+    id: set_moisture_slider_7
+    optimistic: true
+    restore_value: true
+    min_value: $min_value_water
+    max_value: $max_value_water
+    step: 1
+    unit_of_measurement: "%"
+    icon: mdi:water-percent
+    web_server:
+      sorting_group_id: group27
+    set_action:
+      - lambda: |-
+          id(set_moisture_7) = x;
+
+  - platform: template
+    name: $water_min 8
+    id: set_moisture_slider_8
+    optimistic: true
+    restore_value: true
+    min_value: $min_value_water
+    max_value: $max_value_water
+    step: 1
+    unit_of_measurement: "%"
+    icon: mdi:water-percent
+    web_server:
+      sorting_group_id: group28
+    set_action:
+      - lambda: |-
+          id(set_moisture_8) = x;
+
+switch:
+  - platform: template
+    name: $pump_auto 5
+    id: flower5_schedule_enable
+    icon: mdi:calendar-clock
+    web_server:
+      sorting_group_id: group25
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  - platform: template
+    name: $pump_auto 6
+    id: flower6_schedule_enable
+    icon: mdi:calendar-clock
+    web_server:
+      sorting_group_id: group26
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  - platform: template
+    name: $pump_auto 7
+    id: flower7_schedule_enable
+    icon: mdi:calendar-clock
+    web_server:
+      sorting_group_id: group27
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  - platform: template
+    name: $pump_auto 8
+    id: flower8_schedule_enable
+    icon: mdi:calendar-clock
+    web_server:
+      sorting_group_id: group28
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+
+
+time:
+  - platform: sntp
+    id: sntp_time3
+    timezone: Europe/Luxembourg
+    on_time:
+      - seconds: 0
+        minutes: "*"
+        hours: "*"
+        then:
+          - lambda: |-
+              if (!id(flower5_schedule_enable).state &&
+                  !id(flower6_schedule_enable).state &&
+                  !id(flower7_schedule_enable).state &&
+                  !id(flower8_schedule_enable).state) {
+                return;
+              }
+
+              auto now = id(sntp_time).now();
+              if (!now.is_valid()) return;
+
+              char current_time[6];
+              sprintf(current_time, "%02d:%02d", now.hour, now.minute);
+
+              struct Zone {
+                esphome::sensor::Sensor *sensor;
+                const char *name;
+                int moisture_target;
+                std::string schedule;
+                std::function<void()> run_pump;
+                bool enabled;
+              };
+
+              Zone zones[] = {
+                { id(f5_moist), "Зона 5", id(set_moisture_5), id(flower5_schedule), []() { id(pump_on_zone_5).execute(); }, id(flower5_schedule_enable).state },
+                { id(f6_moist), "Зона 6", id(set_moisture_6), id(flower6_schedule), []() { id(pump_on_zone_6).execute(); }, id(flower6_schedule_enable).state },
+                { id(f7_moist), "Зона 7", id(set_moisture_7), id(flower7_schedule), []() { id(pump_on_zone_7).execute(); }, id(flower7_schedule_enable).state },
+                { id(f8_moist), "Зона 8", id(set_moisture_8), id(flower8_schedule), []() { id(pump_on_zone_8).execute(); }, id(flower8_schedule_enable).state },
+              };
+
+              for (auto &z : zones) {
+                if (!z.enabled) {
+                  continue;
+                }
+
+                std::string schedule = z.schedule;
+                bool match = false;
+
+                size_t start = 0;
+                while (true) {
+                  size_t end = schedule.find(';', start);
+                  std::string token = schedule.substr(start, end - start);
+                  token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
+                  if (token == current_time) {
+                    match = true;
+                    break;
+                  }
+                  if (end == std::string::npos) break;
+                  start = end + 1;
+                }
+
+                if (!match) continue;
+
+                float moist = z.sensor->state;
+                if (isnan(moist)) {
+                  continue;
+                }
+
+                if (moist < z.moisture_target) {
+                  z.run_pump();
+                } else {
+                }
+              }

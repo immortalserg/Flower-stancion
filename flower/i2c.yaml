@@ -1,0 +1,4 @@
+i2c:
+  sda: GPIO32
+  scl: GPIO25
+  scan: true

@@ -1,0 +1,97 @@
+substitutions:
+  gpio_button1: GPIO5
+  gpio_button2: GPIO19
+  gpio_button3: GPIO21
+  gpio_button4: GPIO23
+  gpio_mode: INPUT_PULLUP
+  button_inverted: True
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: $gpio_button1
+      mode: $gpio_mode
+      inverted: $button_inverted
+    id: button1
+    on_press:
+      - lambda: |-
+          if (id(button1_type_enable).state) {
+            id(pump_on_zone_1).execute();
+          } else {
+            id(relay_1).toggle();
+          }
+  - platform: gpio
+    pin:
+      number: $gpio_button2
+      mode: $gpio_mode
+      inverted: $button_inverted
+    id: button2
+    on_press:
+      - lambda: |-
+          if (id(button2_type_enable).state) {
+            id(pump_on_zone_2).execute();
+          } else {
+            id(relay_2).toggle();
+          }
+  - platform: gpio
+    pin:
+      number: $gpio_button3
+      mode: $gpio_mode
+      inverted: $button_inverted
+    id: button3
+    on_press:
+      - lambda: |-
+          if (id(button3_type_enable).state) {
+            id(pump_on_zone_3).execute();
+          } else {
+            id(relay_3).toggle();
+          }
+  - platform: gpio
+    pin:
+      number: $gpio_button4
+      mode: $gpio_mode
+      inverted: $button_inverted
+    id: button4
+    on_press:
+      - lambda: |-
+          if (id(button4_type_enable).state) {
+            id(pump_on_zone_4).execute();
+          } else {
+            id(relay_4).toggle();
+          }
+switch:
+  - platform: template
+    name: $button_type 1
+    id: button1_type_enable
+    icon: mdi:calendar-clock
+    web_server:
+      sorting_group_id: group21
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  - platform: template
+    name: $button_type 2
+    id: button2_type_enable
+    icon: mdi:calendar-clock
+    web_server:
+      sorting_group_id: group22
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  - platform: template
+    name: $button_type 3
+    id: button3_type_enable
+    icon: mdi:calendar-clock
+    web_server:
+      sorting_group_id: group23
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  - platform: template
+    name: $button_type 4
+    id: button4_type_enable
+    icon: mdi:calendar-clock
+    web_server:
+      sorting_group_id: group24
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF

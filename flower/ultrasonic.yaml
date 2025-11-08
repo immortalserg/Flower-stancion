@@ -1,0 +1,90 @@
+substitutions:
+  gpio_trigger_pin: GPIO13
+  gpio_echo_pin: GPIO14
+
+web_server:
+  sorting_groups:
+    - id: group110
+      name: ⚙️ $fwather_level_group 1
+      sorting_weight: 200
+
+sensor:
+  - platform: ultrasonic
+    trigger_pin: $gpio_trigger_pin
+    echo_pin: $gpio_echo_pin
+    #name: 'Ultrasonic Sensor'
+    id: ultrasonic_sensor
+    update_interval: 1s
+    accuracy_decimals: 3
+    unit_of_measurement: m
+    web_server: 
+      sorting_group_id: group110
+  - platform: template
+    #name: "Ultrasonic Sensor (mm)"
+    id: ultrasonic_sensor_mm
+    unit_of_measurement: "mm"
+    accuracy_decimals: 0
+    update_interval: 1s
+    lambda: |-
+      if (isnan(id(ultrasonic_sensor).state)) {
+        return NAN;
+      }
+      return id(ultrasonic_sensor).state * 1000.0;
+    web_server:
+      sorting_group_id: group110
+
+  - platform: template
+    name: "Уровень воды в баке"
+    id: water_level_percent
+    icon: mdi:car-coolant-level
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    update_interval: 1s
+    lambda: |-
+      float full = id(full_tank_distance).state;
+      float empty = id(empty_tank_distance).state;
+      float dist = id(ultrasonic_sensor_mm).state;
+
+      if (isnan(dist) || full >= empty) {
+        return NAN;
+      }
+
+      float level = (empty - dist) / (empty - full) * 100.0;
+
+      if (level < 0) level = 0;
+      if (level > 100) level = 100;
+      return level;
+    web_server:
+      sorting_group_id: group110
+
+number:
+  - platform: template
+    name: "Расстояние полного бака"
+    id: full_tank_distance
+    icon: mdi:arrow-expand-vertical
+    min_value: 0
+    max_value: 2000
+    step: 1
+    unit_of_measurement: "mm"
+    optimistic: true
+    restore_value: true
+    initial_value: 50
+    web_server:
+      sorting_group_id: group110
+
+  - platform: template
+    name: "Расстояние пустого бакa"
+    id: empty_tank_distance
+    icon: mdi:arrow-collapse-vertical
+    min_value: 0
+    max_value: 2000
+    step: 1
+    unit_of_measurement: "mm"
+    optimistic: true
+    restore_value: true
+    initial_value: 500
+    web_server:
+      sorting_group_id: group110
+
+
+

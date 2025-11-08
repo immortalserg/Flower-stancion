@@ -1,0 +1,184 @@
+substitutions:
+  # выводы к которым подключены помпы
+  gpio_relay1: GPIO16
+  gpio_relay2: GPIO17
+  gpio_relay3: GPIO26
+  gpio_relay4: GPIO27
+
+globals:
+  - id: last_watering_zone1
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 20
+    initial_value: '"—"'
+  - id: last_watering_zone2
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 20
+    initial_value: '"—"'
+  - id: last_watering_zone3
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 20
+    initial_value: '"—"'
+  - id: last_watering_zone4
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 20
+    initial_value: '"—"'
+  - id: relay1_state
+    type: bool
+    restore_value: true
+    initial_value: "false"
+  - id: relay2_state
+    type: bool
+    restore_value: true
+    initial_value: "false"
+  - id: relay3_state
+    type: bool
+    restore_value: true
+    initial_value: "false"
+  - id: relay4_state
+    type: bool
+    restore_value: true
+    initial_value: "false"
+
+
+esphome:
+  on_boot:
+    priority: -100
+    then:
+      - lambda: |-
+          id(last_watering_sensor_1).publish_state(id(last_watering_zone1));
+          id(last_watering_sensor_2).publish_state(id(last_watering_zone2));
+          id(last_watering_sensor_3).publish_state(id(last_watering_zone3));
+          id(last_watering_sensor_4).publish_state(id(last_watering_zone4));
+script:
+  - id: pump_on_zone_1
+    then:
+      - switch.turn_on: relay_1
+      - delay: !lambda 'return id(pump_run_time_1) * 1000;'
+      - switch.turn_off: relay_1
+  - id: pump_on_zone_2
+    then:
+      - switch.turn_on: relay_2
+      - delay: !lambda 'return id(pump_run_time_2) * 1000;'
+      - switch.turn_off: relay_2
+  - id: pump_on_zone_3
+    then:
+      - switch.turn_on: relay_3
+      - delay: !lambda 'return id(pump_run_time_3) * 1000;'
+      - switch.turn_off: relay_3
+  - id: pump_on_zone_4
+    then:
+      - switch.turn_on: relay_4
+      - delay: !lambda 'return id(pump_run_time_4) * 1000;'
+      - switch.turn_off: relay_4
+
+switch:
+  - platform: gpio
+    pin: $gpio_relay1
+    name: $pump 1
+    id: relay_1
+    icon: "mdi:pump"
+    restore_mode: RESTORE_DEFAULT_OFF
+    web_server:
+      sorting_weight: 7
+      sorting_group_id: group1
+    on_turn_on:
+      - lambda: |-
+          id(last_watering_zone1) = id(sntp_time).now().strftime("%Y-%m-%d %H:%M");
+          id(last_watering_sensor_1).publish_state(id(last_watering_zone1));
+          id(relay1_state) = true;
+    on_turn_off:
+      - lambda: |-
+          id(relay1_state) = false;
+
+  - platform: gpio
+    pin: $gpio_relay2
+    name: $pump 2
+    id: relay_2
+    icon: "mdi:pump"
+    restore_mode: RESTORE_DEFAULT_OFF
+    web_server:
+      sorting_weight: 7
+      sorting_group_id: group2
+    on_turn_on:
+      - lambda: |-
+          id(last_watering_zone2) = id(sntp_time).now().strftime("%Y-%m-%d %H:%M");
+          id(last_watering_sensor_2).publish_state(id(last_watering_zone2));
+          id(relay2_state) = true;
+    on_turn_off:
+      - lambda: |-
+          id(relay2_state) = false;
+
+
+  - platform: gpio
+    pin: $gpio_relay3
+    name: $pump 3
+    id: relay_3
+    icon: "mdi:pump"
+    restore_mode: RESTORE_DEFAULT_OFF
+    web_server:
+      sorting_weight: 7
+      sorting_group_id: group3
+    on_turn_on:
+      - lambda: |-
+          id(last_watering_zone3) = id(sntp_time).now().strftime("%Y-%m-%d %H:%M");
+          id(last_watering_sensor_3).publish_state(id(last_watering_zone3));
+          id(relay3_state) = true;
+    on_turn_off:
+      - lambda: |-
+          id(relay3_state) = false;
+
+
+  - platform: gpio
+    pin: $gpio_relay4
+    name: $pump 4
+    id: relay_4
+    icon: "mdi:pump"
+    restore_mode: RESTORE_DEFAULT_OFF
+    web_server:
+      sorting_weight: 7
+      sorting_group_id: group4
+    on_turn_on:
+      - lambda: |-
+          id(last_watering_zone4) = id(sntp_time).now().strftime("%Y-%m-%d %H:%M");
+          id(last_watering_sensor_4).publish_state(id(last_watering_zone4));
+          id(relay4_state) = true;
+    on_turn_off:
+      - lambda: |-
+          id(relay4_state) = false;
+
+
+text_sensor:
+  - platform: template
+    name: $last_water 1
+    id: last_watering_sensor_1
+    icon: mdi:clock
+    web_server:
+      sorting_weight: 6
+      sorting_group_id: group1
+  - platform: template
+    name: $last_water 2
+    id: last_watering_sensor_2
+    icon: mdi:clock
+    web_server:
+      sorting_weight: 6
+      sorting_group_id: group2
+  - platform: template
+    name: $last_water 3
+    id: last_watering_sensor_3
+    icon: mdi:clock
+    web_server:
+      sorting_weight: 6
+      sorting_group_id: group3
+  - platform: template
+    name: $last_water 4
+    id: last_watering_sensor_4
+    icon: mdi:clock
+    web_server:
+      sorting_weight: 6
+      sorting_group_id: group4
+
+

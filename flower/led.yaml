@@ -1,0 +1,91 @@
+substitutions:
+  i2c_address_led: 0x20
+
+pcf8574:
+  - id: pcf8574_led
+    address: $i2c_address_led
+    pcf8575: false
+
+switch:
+  - platform: gpio
+    id: led_level1
+    pin:
+      pcf8574: pcf8574_led
+      number: 1
+      mode: OUTPUT
+      inverted: true
+
+  - platform: gpio
+    id: led1
+    pin:
+      pcf8574: pcf8574_led
+      number: 4
+      mode: OUTPUT
+      inverted: true
+
+  - platform: gpio
+    id: led2
+    pin:
+      pcf8574: pcf8574_led
+      number: 5
+      mode: OUTPUT
+      inverted: true
+
+  - platform: gpio
+    id: led3
+    pin:
+      pcf8574: pcf8574_led
+      number: 6
+      mode: OUTPUT
+      inverted: true
+
+  - platform: gpio
+    id: led4
+    pin:
+      pcf8574: pcf8574_led
+      number: 7
+      mode: OUTPUT
+      inverted: true
+
+
+
+status_led:
+  pin:
+    pcf8574: pcf8574_led
+    number: 0
+    inverted: true
+
+
+interval:
+  - interval: 500ms
+    then:
+      - lambda: |-
+          if (id(water_level_percent).state < 10) {
+            id(led_level1).turn_on();
+          } else {
+            id(led_level1).turn_off();
+          }
+      - lambda: |-
+          if (id(relay_1).state) {
+            id(led1).turn_on();
+          } else {
+            id(led1).turn_off();
+          }
+
+          if (id(relay_2).state) {
+            id(led2).turn_on();
+          } else {
+            id(led2).turn_off();
+          }
+
+          if (id(relay_3).state) {
+            id(led3).turn_on();
+          } else {
+            id(led3).turn_off();
+          }
+
+          if (id(relay_4).state) {
+            id(led4).turn_on();
+          } else {
+            id(led4).turn_off();
+          }

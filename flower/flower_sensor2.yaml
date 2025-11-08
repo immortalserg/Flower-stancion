@@ -1,0 +1,834 @@
+substitutions:
+  fl5_mac: "FF:FF:FF:FF:FF:FF"
+  fl6_mac: "FF:FF:FF:FF:FF:FF"
+  fl7_mac: "FF:FF:FF:FF:FF:FF"
+  fl8_mac: "FF:FF:FF:FF:FF:FF"
+
+globals:
+  - id: flower5_mac
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 17
+    initial_value: '"FF:FF:FF:FF:FF:FF"'
+  - id: flower6_mac
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 17
+    initial_value: '"FF:FF:FF:FF:FF:FF"'
+  - id: flower7_mac
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 17
+    initial_value: '"FF:FF:FF:FF:FF:FF"'
+  - id: flower8_mac
+    type: std::string
+    restore_value: true
+    max_restore_data_length: 17
+    initial_value: '"FF:FF:FF:FF:FF:FF"'
+  - id: flower5_sensor_model
+    type: int
+    restore_value: yes
+    initial_value: '1'
+  - id: flower6_sensor_model
+    type: int
+    restore_value: yes
+    initial_value: '1'
+  - id: flower7_sensor_model
+    type: int
+    restore_value: yes
+    initial_value: '1'
+  - id: flower8_sensor_model
+    type: int
+    restore_value: yes
+    initial_value: '1'
+
+
+esphome:
+  on_boot:
+    priority: -10
+    then:
+      - lambda: |-
+          auto parse_mac = [](std::string mac) -> uint64_t {
+            uint64_t value = 0;
+            int byte_val;
+            for (int i = 0; i < 6; i++) {
+              sscanf(mac.c_str() + i * 3, "%2x", &byte_val);
+              value = (value << 8) | (byte_val & 0xFF);
+            }
+            return value;
+          };
+          id(fl5_01).set_address(parse_mac(id(flower5_mac).c_str()));
+          id(fl6_01).set_address(parse_mac(id(flower6_mac).c_str()));
+          id(fl7_01).set_address(parse_mac(id(flower7_mac).c_str()));
+          id(fl8_01).set_address(parse_mac(id(flower8_mac).c_str()));
+          id(fl5_10).set_address(parse_mac(id(flower5_mac).c_str()));
+          id(fl6_10).set_address(parse_mac(id(flower6_mac).c_str()));
+          id(fl7_10).set_address(parse_mac(id(flower7_mac).c_str()));
+          id(fl8_10).set_address(parse_mac(id(flower8_mac).c_str()));
+          id(fl5_02).set_address(parse_mac(id(flower5_mac).c_str()));
+          id(fl6_02).set_address(parse_mac(id(flower6_mac).c_str()));
+          id(fl7_02).set_address(parse_mac(id(flower7_mac).c_str()));
+          id(fl8_02).set_address(parse_mac(id(flower8_mac).c_str()));
+          id(fl5_002).set_address(parse_mac(id(flower5_mac).c_str()));
+          id(fl6_002).set_address(parse_mac(id(flower6_mac).c_str()));
+          id(fl7_002).set_address(parse_mac(id(flower7_mac).c_str()));
+          id(fl8_002).set_address(parse_mac(id(flower8_mac).c_str()));
+      - lambda: |-
+          auto update_select = [](int model, auto select_id) {
+            if (model == 1)
+              select_id->publish_state("HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor");
+            else if (model == 2)
+              select_id->publish_state("HHCCJCY10 Xiaomi MiFlora (Pink version)");
+            else if (model == 3)
+              select_id->publish_state("HHCCPOT002 Xiaomi VegTrug Grow Care Garden");
+            else if (model == 4)
+              select_id->publish_state("GCLS002 Generic Flora Sensor");
+          };
+
+          update_select(id(flower5_sensor_model), id(flower5_sensor_model_select));
+          update_select(id(flower6_sensor_model), id(flower6_sensor_model_select));
+          update_select(id(flower7_sensor_model), id(flower7_sensor_model_select));
+          update_select(id(flower8_sensor_model), id(flower7_sensor_model_select));
+
+
+web_server:
+  sorting_groups:
+    - id: group25
+      name: ⚙️🌸 $setting $flower 5
+      sorting_weight: 55
+    - id: group26
+      name: ⚙️🪴 $setting $flower 6
+      sorting_weight: 56
+    - id: group27
+      name: ⚙️🌻 $setting $flower 7
+      sorting_weight: 57
+    - id: group28
+      name: ⚙️🌺 $setting $flower 8
+      sorting_weight: 58
+
+
+
+text:
+  - platform: template
+    name: $mac 5
+    id: flower5_mac_text
+    mode: text
+    icon: mdi:bluetooth
+    lambda: |-
+      return id(flower5_mac);
+    set_action:
+      - lambda: |-
+          if (x.size() == 17) {
+            id(flower5_mac) = x;
+            ESP_LOGI("BLE", "Новый MAC Flower5: %s", x.c_str());
+          } else {
+            ESP_LOGW("BLE", "Некорректный MAC: %s", x.c_str());
+          }
+    web_server:
+      sorting_group_id: group25
+
+  - platform: template
+    name: $mac 6
+    id: flower6_mac_text
+    mode: text
+    icon: mdi:bluetooth
+    lambda: |-
+      return id(flower6_mac);
+    set_action:
+      - lambda: |-
+          if (x.size() == 17) {
+            id(flower6_mac) = x;
+            ESP_LOGI("BLE", "Новый MAC Flower6: %s", x.c_str());
+          } else {
+            ESP_LOGW("BLE", "Некорректный MAC: %s", x.c_str());
+          }
+    web_server:
+      sorting_group_id: group26
+
+  - platform: template
+    name: $mac 7
+    id: flower7_mac_text
+    mode: text
+    icon: mdi:bluetooth
+    lambda: |-
+      return id(flower7_mac);
+    set_action:
+      - lambda: |-
+          if (x.size() == 17) {
+            id(flower7_mac) = x;
+            ESP_LOGI("BLE", "Новый MAC Flower7: %s", x.c_str());
+          } else {
+            ESP_LOGW("BLE", "Некорректный MAC: %s", x.c_str());
+          }
+    web_server:
+      sorting_group_id: group27
+
+  - platform: template
+    name: $mac 8
+    id: flower8_mac_text
+    mode: text
+    icon: mdi:bluetooth
+    lambda: |-
+      return id(flower8_mac);
+    set_action:
+      - lambda: |-
+          if (x.size() == 17) {
+            id(flower8_mac) = x;
+            ESP_LOGI("BLE", "Новый MAC Flower8: %s", x.c_str());
+          } else {
+            ESP_LOGW("BLE", "Некорректный MAC: %s", x.c_str());
+          }
+    web_server:
+      sorting_group_id: group28
+
+
+select:
+  - platform: template
+    name: $model_sensor 5
+    id: flower5_sensor_model_select
+    icon: mdi:chip
+    options:
+      - "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
+      - "HHCCJCY10 Xiaomi MiFlora (Pink version)"
+      - "HHCCPOT002 Xiaomi VegTrug Grow Care Garden"
+      - "GCLS002 Generic Flora Sensor"
+    optimistic: true
+    initial_option: "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
+    web_server:
+      sorting_group_id: group25
+    on_value:
+      - lambda: |-
+          if (x == "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor") {
+            id(flower5_sensor_model) = 1;
+          } else if (x == "HHCCJCY10 Xiaomi MiFlora (Pink version)") {
+            id(flower5_sensor_model) = 2;
+          } else if (x == "HHCCPOT002 Xiaomi VegTrug Grow Care Garden") {
+            id(flower5_sensor_model) = 3;
+          } else if (x == "GCLS002 Generic Flora Sensor") {
+            id(flower5_sensor_model) = 4;
+          }
+
+  - platform: template
+    name: $model_sensor 6
+    id: flower6_sensor_model_select
+    icon: mdi:chip
+    options:
+      - "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
+      - "HHCCJCY10 Xiaomi MiFlora (Pink version)"
+      - "HHCCPOT002 Xiaomi VegTrug Grow Care Garden"
+      - "GCLS002 Generic Flora Sensor"
+    optimistic: true
+    initial_option: "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
+    web_server:
+      sorting_group_id: group26
+    on_value:
+      - lambda: |-
+          if (x == "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor") {
+            id(flower6_sensor_model) = 1;
+          } else if (x == "HHCCJCY10 Xiaomi MiFlora (Pink version)") {
+            id(flower6_sensor_model) = 2;
+          } else if (x == "HHCCPOT002 Xiaomi VegTrug Grow Care Garden") {
+            id(flower6_sensor_model) = 3;
+          } else if (x == "GCLS002 Generic Flora Sensor") {
+            id(flower6_sensor_model) = 4;
+          }
+
+  - platform: template
+    name: $model_sensor 7
+    id: flower7_sensor_model_select
+    icon: mdi:chip
+    options:
+      - "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
+      - "HHCCJCY10 Xiaomi MiFlora (Pink version)"
+      - "HHCCPOT002 Xiaomi VegTrug Grow Care Garden"
+      - "GCLS002 Generic Flora Sensor"
+    optimistic: true
+    initial_option: "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
+    web_server:
+      sorting_group_id: group27
+    on_value:
+      - lambda: |-
+          if (x == "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor") {
+            id(flower7_sensor_model) = 1;
+          } else if (x == "HHCCJCY10 Xiaomi MiFlora (Pink version)") {
+            id(flower7_sensor_model) = 2;
+          } else if (x == "HHCCPOT002 Xiaomi VegTrug Grow Care Garden") {
+            id(flower7_sensor_model) = 3;
+          } else if (x == "GCLS002 Generic Flora Sensor") {
+            id(flower7_sensor_model) = 4;
+          }
+
+  - platform: template
+    name: $model_sensor 8
+    id: flower8_sensor_model_select
+    icon: mdi:chip
+    options:
+      - "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
+      - "HHCCJCY10 Xiaomi MiFlora (Pink version)"
+      - "HHCCPOT002 Xiaomi VegTrug Grow Care Garden"
+      - "GCLS002 Generic Flora Sensor"
+    optimistic: true
+    initial_option: "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor"
+    web_server:
+      sorting_group_id: group28
+    on_value:
+      - lambda: |-
+          if (x == "HHCCJCY01 Xiaomi Mi Flower Care Plant Sensor") {
+            id(flower8_sensor_model) = 1;
+          } else if (x == "HHCCJCY10 Xiaomi MiFlora (Pink version)") {
+            id(flower8_sensor_model) = 2;
+          } else if (x == "HHCCPOT002 Xiaomi VegTrug Grow Care Garden") {
+            id(flower8_sensor_model) = 3;
+          } else if (x == "GCLS002 Generic Flora Sensor") {
+            id(flower8_sensor_model) = 4;
+          }
+
+
+
+sensor:
+# Зона 1 hhccjcy01
+  - platform: xiaomi_hhccjcy01
+    mac_address: $fl5_mac
+    id: fl5_01
+    temperature:
+      id: f5_temp_01
+    moisture:
+      id: f5_moist_01
+    illuminance:
+      id: f5_lux_01
+    conductivity:
+      id: f5_cond_01
+    battery_level:
+      id: f5_batt_01
+
+  # Зона 1 hhccjcy10
+  - platform: xiaomi_hhccjcy10
+    mac_address: $fl5_mac
+    id: fl5_10
+    temperature:
+      id: f5_temp_10
+    moisture:
+      id: f5_moist_10
+    illuminance:
+      id: f5_lux_10
+    conductivity:
+      id: f5_cond_10
+    battery_level:
+      id: f5_batt_10
+
+  # Зона 1 HHCCPOT002 — только влажность и проводимость
+  - platform: xiaomi_hhccpot002
+    mac_address: $fl5_mac
+    id: fl5_02
+    moisture:
+      id: f5_moist_002
+    conductivity:
+      id: f5_cond_002
+
+  # Зона 1 GCLS002 — без батареи
+  - platform: xiaomi_gcls002
+    mac_address: $fl5_mac
+    id: fl5_002
+    temperature:
+      id: f5_temp_gcls
+    moisture:
+      id: f5_moist_gcls
+    illuminance:
+      id: f5_lux_gcls
+    conductivity:
+      id: f5_cond_gcls
+
+
+  # Зона 2 hhccjcy01
+  - platform: xiaomi_hhccjcy01
+    mac_address: $fl6_mac
+    id: fl6_01
+    temperature:
+      id: f6_temp_01
+    moisture:
+      id: f6_moist_01
+    illuminance:
+      id: f6_lux_01
+    conductivity:
+      id: f6_cond_01
+    battery_level:
+      id: f6_batt_01
+
+  # Зона 2 hhccjcy10
+  - platform: xiaomi_hhccjcy10
+    mac_address: $fl6_mac
+    id: fl6_10
+    temperature:
+      id: f6_temp_10
+    moisture:
+      id: f6_moist_10
+    illuminance:
+      id: f6_lux_10
+    conductivity:
+      id: f6_cond_10
+    battery_level:
+      id: f6_batt_10
+
+  # Зона 2 HHCCPOT002 — только влажность и проводимость
+  - platform: xiaomi_hhccpot002
+    mac_address: $fl6_mac
+    id: fl6_02
+    moisture:
+      id: f6_moist_002
+    conductivity:
+      id: f6_cond_002
+
+  # Зона 1 GCLS002 — без батареи
+  - platform: xiaomi_gcls002
+    mac_address: $fl6_mac
+    id: fl6_002
+    temperature:
+      id: f6_temp_gcls
+    moisture:
+      id: f6_moist_gcls
+    illuminance:
+      id: f6_lux_gcls
+    conductivity:
+      id: f6_cond_gcls
+
+
+  # Зона 3 hhccjcy01
+  - platform: xiaomi_hhccjcy01
+    mac_address: $fl7_mac
+    id: fl7_01
+    temperature:
+      id: f7_temp_01
+    moisture:
+      id: f7_moist_01
+    illuminance:
+      id: f7_lux_01
+    conductivity:
+      id: f7_cond_01
+    battery_level:
+      id: f7_batt_01
+
+  # Зона 3 hhccjcy10
+  - platform: xiaomi_hhccjcy10
+    mac_address: $fl7_mac
+    id: fl7_10
+    temperature:
+      id: f7_temp_10
+    moisture:
+      id: f7_moist_10
+    illuminance:
+      id: f7_lux_10
+    conductivity:
+      id: f7_cond_10
+    battery_level:
+      id: f7_batt_10
+
+  # Зона 3 HHCCPOT002 — только влажность и проводимость
+  - platform: xiaomi_hhccpot002
+    mac_address: $fl7_mac
+    id: fl7_02
+    moisture:
+      id: f7_moist_002
+    conductivity:
+      id: f7_cond_002
+
+  # Зона 3 GCLS002 — без батареи
+  - platform: xiaomi_gcls002
+    mac_address: $fl7_mac
+    id: fl7_002
+    temperature:
+      id: f7_temp_gcls
+    moisture:
+      id: f7_moist_gcls
+    illuminance:
+      id: f7_lux_gcls
+    conductivity:
+      id: f7_cond_gcls
+
+
+  # Зона 4 hhccjcy01
+  - platform: xiaomi_hhccjcy01
+    mac_address: $fl8_mac
+    id: fl8_01
+    temperature:
+      id: f8_temp_01
+    moisture:
+      id: f8_moist_01
+    illuminance:
+      id: f8_lux_01
+    conductivity:
+      id: f8_cond_01
+    battery_level:
+      id: f8_batt_01
+
+  # Зона 4 hhccjcy10
+  - platform: xiaomi_hhccjcy10
+    mac_address: $fl8_mac
+    id: fl8_10
+    temperature:
+      id: f8_temp_10
+    moisture:
+      id: f8_moist_10
+    illuminance:
+      id: f8_lux_10
+    conductivity:
+      id: f8_cond_10
+    battery_level:
+      id: f8_batt_10
+
+  # Зона 4 HHCCPOT002 — только влажность и проводимость
+  - platform: xiaomi_hhccpot002
+    mac_address: $fl8_mac
+    id: fl8_02
+    moisture:
+      id: f8_moist_002
+    conductivity:
+      id: f8_cond_002
+
+  # Зона 4 GCLS002 — без батареи
+  - platform: xiaomi_gcls002
+    mac_address: $fl8_mac
+    id: fl8_002
+    temperature:
+      id: f8_temp_gcls
+    moisture:
+      id: f8_moist_gcls
+    illuminance:
+      id: f8_lux_gcls
+    conductivity:
+      id: f8_cond_gcls
+
+# 🌸 FLOWER 1
+
+  - platform: template
+    name: $temp 5
+    id: f5_temp
+    icon: mdi:thermometer
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    web_server:
+      sorting_weight: 1
+      sorting_group_id: group5
+    lambda: |-
+      if (id(flower5_sensor_model) == 1) return id(f5_temp_01).state;
+      else if (id(flower5_sensor_model) == 2) return id(f5_temp_10).state;
+      else if (id(flower5_sensor_model) == 3) return NAN;
+      else if (id(flower5_sensor_model) == 4) return id(f5_temp_gcls).state;
+      else return NAN;
+
+  - platform: template
+    name: $moist 5
+    id: f5_moist
+    icon: mdi:water-percent
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    web_server:
+      sorting_weight: 2
+      sorting_group_id: group5
+    lambda: |-
+      if (id(flower5_sensor_model) == 1) return id(f5_moist_01).state;
+      else if (id(flower5_sensor_model) == 2) return id(f5_moist_10).state;
+      else if (id(flower5_sensor_model) == 3) return id(f5_moist_002).state;
+      else if (id(flower5_sensor_model) == 4) return id(f5_moist_gcls).state;
+      else return NAN;
+
+  - platform: template
+    name: $light 5
+    id: f5_light
+    icon: mdi:white-balance-sunny
+    unit_of_measurement: "lx"
+    accuracy_decimals: 0
+    web_server:
+      sorting_weight: 3
+      sorting_group_id: group5
+    lambda: |-
+      if (id(flower5_sensor_model) == 1) return id(f5_lux_01).state;
+      else if (id(flower5_sensor_model) == 2) return id(f5_lux_10).state;
+      else if (id(flower5_sensor_model) == 3) return NAN;
+      else if (id(flower5_sensor_model) == 4) return id(f5_lux_gcls).state;
+      else return NAN;
+
+  - platform: template
+    name: $cond 5
+    id: f5_cond
+    icon: mdi:flash
+    unit_of_measurement: "μS/cm"
+    accuracy_decimals: 0
+    web_server:
+      sorting_weight: 4
+      sorting_group_id: group5
+    lambda: |-
+      if (id(flower5_sensor_model) == 1) return id(f5_cond_01).state;
+      else if (id(flower5_sensor_model) == 2) return id(f5_cond_10).state;
+      else if (id(flower5_sensor_model) == 3) return id(f5_cond_002).state;
+      else if (id(flower5_sensor_model) == 4) return id(f5_cond_gcls).state;
+      else return NAN;
+
+  - platform: template
+    name: $batt 5
+    id: f5_batt
+    icon: mdi:battery
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    web_server:
+      sorting_weight: 5
+      sorting_group_id: group5
+    lambda: |-
+      if (id(flower5_sensor_model) == 1) return id(f5_batt_01).state;
+      else if (id(flower5_sensor_model) == 2) return id(f5_batt_10).state;
+      else if (id(flower5_sensor_model) == 3) return NAN;
+      else if (id(flower5_sensor_model) == 4) return NAN;
+      else return NAN;
+
+
+# 🌿 FLOWER 2
+
+  - platform: template
+    name: $temp 6
+    id: f6_temp
+    icon: mdi:thermometer
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    web_server:
+      sorting_weight: 1
+      sorting_group_id: group6
+    lambda: |-
+      if (id(flower6_sensor_model) == 1) return id(f6_temp_01).state;
+      else if (id(flower6_sensor_model) == 2) return id(f6_temp_10).state;
+      else if (id(flower6_sensor_model) == 3) return NAN;
+      else if (id(flower6_sensor_model) == 4) return id(f6_temp_gcls).state;
+      else return NAN;
+
+  - platform: template
+    name: $moist 6
+    id: f6_moist
+    icon: mdi:water-percent
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    web_server:
+      sorting_weight: 2
+      sorting_group_id: group6
+    lambda: |-
+      if (id(flower6_sensor_model) == 1) return id(f6_moist_01).state;
+      else if (id(flower6_sensor_model) == 2) return id(f6_moist_10).state;
+      else if (id(flower6_sensor_model) == 3) return id(f6_moist_002).state;
+      else if (id(flower6_sensor_model) == 4) return id(f6_moist_gcls).state;
+      else return NAN;
+
+  - platform: template
+    name: $light 6
+    id: f6_light
+    icon: mdi:white-balance-sunny
+    unit_of_measurement: "lx"
+    accuracy_decimals: 0
+    web_server:
+      sorting_weight: 3
+      sorting_group_id: group6
+    lambda: |-
+      if (id(flower6_sensor_model) == 1) return id(f6_lux_01).state;
+      else if (id(flower6_sensor_model) == 2) return id(f6_lux_10).state;
+      else if (id(flower6_sensor_model) == 3) return NAN;
+      else if (id(flower6_sensor_model) == 4) return id(f6_lux_gcls).state;
+      else return NAN;
+
+  - platform: template
+    name: $cond 6
+    id: f6_cond
+    icon: mdi:flash
+    unit_of_measurement: "μS/cm"
+    accuracy_decimals: 0
+    web_server:
+      sorting_weight: 4
+      sorting_group_id: group6
+    lambda: |-
+      if (id(flower6_sensor_model) == 1) return id(f6_cond_01).state;
+      else if (id(flower6_sensor_model) == 2) return id(f6_cond_10).state;
+      else if (id(flower6_sensor_model) == 3) return id(f6_cond_002).state;
+      else if (id(flower6_sensor_model) == 4) return id(f6_cond_gcls).state;
+      else return NAN;
+
+  - platform: template
+    name: $batt 6
+    id: f6_batt
+    icon: mdi:battery
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    web_server:
+      sorting_weight: 5
+      sorting_group_id: group6
+    lambda: |-
+      if (id(flower6_sensor_model) == 1) return id(f6_batt_01).state;
+      else if (id(flower6_sensor_model) == 2) return id(f6_batt_10).state;
+      else if (id(flower6_sensor_model) == 3) return NAN;
+      else if (id(flower6_sensor_model) == 4) return NAN;
+      else return NAN;
+
+# 🌼 FLOWER 3
+
+  - platform: template
+    name: $temp 7
+    id: f7_temp
+    icon: mdi:thermometer
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    web_server:
+      sorting_weight: 1
+      sorting_group_id: group7
+    lambda: |-
+      if (id(flower7_sensor_model) == 1) return id(f7_temp_01).state;
+      else if (id(flower7_sensor_model) == 2) return id(f7_temp_10).state;
+      else if (id(flower7_sensor_model) == 3) return NAN;
+      else if (id(flower7_sensor_model) == 4) return id(f7_temp_gcls).state;
+      else return NAN;
+
+  - platform: template
+    name: $moist 7
+    id: f7_moist
+    icon: mdi:water-percent
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    web_server:
+      sorting_weight: 2
+      sorting_group_id: group7
+    lambda: |-
+      if (id(flower7_sensor_model) == 1) return id(f7_moist_01).state;
+      else if (id(flower7_sensor_model) == 2) return id(f7_moist_10).state;
+      else if (id(flower7_sensor_model) == 3) return id(f7_moist_002).state;
+      else if (id(flower7_sensor_model) == 4) return id(f7_moist_gcls).state;
+      else return NAN;
+
+  - platform: template
+    name: $light 7
+    id: f7_light
+    icon: mdi:white-balance-sunny
+    unit_of_measurement: "lx"
+    accuracy_decimals: 0
+    web_server:
+      sorting_weight: 3
+      sorting_group_id: group7
+    lambda: |-
+      if (id(flower7_sensor_model) == 1) return id(f7_lux_01).state;
+      else if (id(flower7_sensor_model) == 2) return id(f7_lux_10).state;
+      else if (id(flower7_sensor_model) == 3) return NAN;
+      else if (id(flower7_sensor_model) == 4) return id(f7_lux_gcls).state;
+      else return NAN;
+
+  - platform: template
+    name: $cond 7
+    id: f7_cond
+    icon: mdi:flash
+    unit_of_measurement: "μS/cm"
+    accuracy_decimals: 0
+    web_server:
+      sorting_weight: 4
+      sorting_group_id: group7
+    lambda: |-
+      if (id(flower7_sensor_model) == 1) return id(f7_cond_01).state;
+      else if (id(flower7_sensor_model) == 2) return id(f7_cond_10).state;
+      else if (id(flower7_sensor_model) == 3) return id(f7_cond_002).state;
+      else if (id(flower7_sensor_model) == 4) return id(f7_cond_gcls).state;
+      else return NAN;
+
+  - platform: template
+    name: $batt 7
+    id: f7_batt
+    icon: mdi:battery
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    web_server:
+      sorting_weight: 5
+      sorting_group_id: group7
+    lambda: |-
+      if (id(flower7_sensor_model) == 1) return id(f7_batt_01).state;
+      else if (id(flower7_sensor_model) == 2) return id(f7_batt_10).state;
+      else if (id(flower7_sensor_model) == 3) return NAN;
+      else if (id(flower7_sensor_model) == 4) return NAN;
+      else return NAN;
+
+# 🌺 FLOWER 4
+
+  - platform: template
+    name: $temp 8
+    id: f8_temp
+    icon: mdi:thermometer
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    web_server:
+      sorting_weight: 1
+      sorting_group_id: group8
+    lambda: |-
+      if (id(flower8_sensor_model) == 1) return id(f8_temp_01).state;
+      else if (id(flower8_sensor_model) == 2) return id(f8_temp_10).state;
+      else if (id(flower8_sensor_model) == 3) return NAN;
+      else if (id(flower8_sensor_model) == 4) return id(f8_temp_gcls).state;
+      else return NAN;
+
+  - platform: template
+    name: $moist 8
+    id: f8_moist
+    icon: mdi:water-percent
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    web_server:
+      sorting_weight: 2
+      sorting_group_id: group8
+    lambda: |-
+      if (id(flower8_sensor_model) == 1) return id(f8_moist_01).state;
+      else if (id(flower8_sensor_model) == 2) return id(f8_moist_10).state;
+      else if (id(flower8_sensor_model) == 3) return id(f8_moist_002).state;
+      else if (id(flower8_sensor_model) == 4) return id(f8_moist_gcls).state;
+      else return NAN;
+
+  - platform: template
+    name: $light 8
+    id: f8_light
+    icon: mdi:white-balance-sunny
+    unit_of_measurement: "lx"
+    accuracy_decimals: 0
+    web_server:
+      sorting_weight: 3
+      sorting_group_id: group8
+    lambda: |-
+      if (id(flower8_sensor_model) == 1) return id(f8_lux_01).state;
+      else if (id(flower8_sensor_model) == 2) return id(f8_lux_10).state;
+      else if (id(flower8_sensor_model) == 3) return NAN;
+      else if (id(flower8_sensor_model) == 4) return id(f8_lux_gcls).state;
+      else return NAN;
+
+  - platform: template
+    name: $cond 8
+    id: f8_cond
+    icon: mdi:flash
+    unit_of_measurement: "μS/cm"
+    accuracy_decimals: 0
+    web_server:
+      sorting_weight: 4
+      sorting_group_id: group8
+    lambda: |-
+      if (id(flower8_sensor_model) == 1) return id(f8_cond_01).state;
+      else if (id(flower8_sensor_model) == 2) return id(f8_cond_10).state;
+      else if (id(flower8_sensor_model) == 3) return id(f8_cond_002).state;
+      else if (id(flower8_sensor_model) == 4) return id(f8_cond_gcls).state;
+      else return NAN;
+
+  - platform: template
+    name: $batt 8
+    id: f8_batt
+    icon: mdi:battery
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    web_server:
+      sorting_weight: 5
+      sorting_group_id: group8
+    lambda: |-
+      if (id(flower8_sensor_model) == 1) return id(f8_batt_01).state;
+      else if (id(flower8_sensor_model) == 2) return id(f8_batt_10).state;
+      else if (id(flower8_sensor_model) == 3) return NAN;
+      else if (id(flower8_sensor_model) == 4) return NAN;
+      else return NAN;
+
+
+
+
+
+
+

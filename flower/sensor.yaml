@@ -1,0 +1,67 @@
+web_server:
+  sorting_groups:
+    - id: group100
+      name: "⚙️ Общие"
+      sorting_weight: 100
+
+sensor:
+  - platform: uptime
+    name: "Uptime s"
+    icon: mdi:timer
+    id: uptime_s
+    update_interval: 60s
+    web_server:
+      sorting_group_id: group100
+  - platform: wifi_signal
+    name: "WiFi Signal dB"
+    id: wifi_signal_db
+    update_interval: 60s
+    entity_category: "diagnostic"
+    icon: mdi:wifi
+    web_server:
+      sorting_group_id: group100
+  - platform: copy
+    source_id: wifi_signal_db
+    name: "WiFi Signal Percent"
+    filters:
+      - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
+    unit_of_measurement: " %"
+    entity_category: "diagnostic"
+    icon: mdi:wifi
+    device_class: ""
+    web_server:
+      sorting_group_id: group100
+
+switch:
+  - platform: restart
+    name: "Перезагрузить"
+    web_server:
+      sorting_group_id: group100
+
+text_sensor:
+  - platform: template
+    name: "Uptime"
+    lambda: |-
+      uint32_t dur = id(uptime_s).state;
+      int dys = 0;
+      int hrs = 0;
+      int mnts = 0;
+      if (dur > 86399) {
+        dys = trunc(dur / 86400);
+        dur = dur - (dys * 86400);
+      }
+      if (dur > 3599) {
+        hrs = trunc(dur / 3600);
+        dur = dur - (hrs * 3600);
+      }
+      if (dur > 59) {
+        mnts = trunc(dur / 60);
+        dur = dur - (mnts * 60);
+      }
+      char buffer[17];
+      sprintf(buffer, "%ud %02uh %02um %02us", dys, hrs, mnts, dur);
+      return {buffer};
+    icon: mdi:clock-start
+    update_interval: 60s
+    web_server:
+      sorting_group_id: group100

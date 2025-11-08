@@ -1,0 +1,19 @@
+substitutions:
+  flower: Цветок
+  setting: Настройки
+  mac: MAC
+  model_sensor: Модель датчика
+  temp: Температура
+  moist: Влажность почвы
+  light: Освещенность
+  cond: Питательность
+  batt: Батарея
+  last_water: Последний полив
+  pump: Помпа
+  pump_time: Продолжительность полива
+  pump_auto: Расписание включено
+  water_min: Минимальная влажность
+  schedule: Расписание
+  button_type: Кнопки включают насос с автовыключением
+  water_level: Уровень воды в баке
+  wather_level_group: Настройки емкости для воды
