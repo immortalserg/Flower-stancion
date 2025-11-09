@@ -56,3 +56,12 @@ packages:
   - !include flower/button_gpio.yaml       # кнопки 1 - 4 подключенные к GPIO
   - !include flower/ultrasonic.yaml        # сенсор уровня воды
   - !include flower/led.yaml               # светодиоды индикации состояний
+#  - !include flower/button_pcf8574.yaml    # кнопки 1 - 4 подключенные к pcf8574
+#  - !include flower/button_pcf8574_2.yaml  # кнопки 5 - 8 подключенные к pcf8574
+#  - !include flower/led_pcf8574.yaml       # светодиоды индикации 1 - 8 подключенные к pcf8574
+
+
+
+
+
+
