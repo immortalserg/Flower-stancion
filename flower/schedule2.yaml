@@ -20,22 +20,6 @@ globals:
     restore_value: true
     max_restore_data_length: 100
     initial_value: '"09:10"'
-  - id: pump_run_time_5
-    type: int
-    restore_value: yes
-    initial_value: '10'
-  - id: pump_run_time_6
-    type: int
-    restore_value: yes
-    initial_value: '10'
-  - id: pump_run_time_7
-    type: int
-    restore_value: yes
-    initial_value: '10'
-  - id: pump_run_time_8
-    type: int
-    restore_value: yes
-    initial_value: '10'
   - id: set_moisture_5
     type: int
     restore_value: yes
@@ -58,11 +42,6 @@ esphome:
     priority: -10
     then:
       - lambda: |-
-          id(pump_time_slider_5).publish_state(id(pump_run_time_5));
-          id(pump_time_slider_6).publish_state(id(pump_run_time_6));
-          id(pump_time_slider_7).publish_state(id(pump_run_time_7));
-          id(pump_time_slider_8).publish_state(id(pump_run_time_8));
-
           id(set_moisture_slider_1).publish_state(id(set_moisture_5));
           id(set_moisture_slider_2).publish_state(id(set_moisture_6));
           id(set_moisture_slider_3).publish_state(id(set_moisture_7));
@@ -129,70 +108,6 @@ text:
 
 
 number:
-  - platform: template
-    name: $pump_time 5
-    id: pump_time_slider_5
-    optimistic: true
-    restore_value: true
-    min_value: 1
-    max_value: $max_value_time
-    step: 1
-    unit_of_measurement: "s"
-    icon: mdi:timer-outline
-    web_server:
-      sorting_group_id: group25
-    set_action:
-      - lambda: |-
-          id(pump_run_time_5) = x;
-
-  - platform: template
-    name: $pump_time 6
-    id: pump_time_slider_6
-    optimistic: true
-    restore_value: true
-    min_value: 1
-    max_value: $max_value_time
-    step: 1
-    unit_of_measurement: "s"
-    icon: mdi:timer-outline
-    web_server:
-      sorting_group_id: group26
-    set_action:
-      - lambda: |-
-          id(pump_run_time_6) = x;
-
-  - platform: template
-    name: $pump_time 7
-    id: pump_time_slider_7
-    optimistic: true
-    restore_value: true
-    min_value: 1
-    max_value: $max_value_time
-    step: 1
-    unit_of_measurement: "s"
-    icon: mdi:timer-outline
-    web_server:
-      sorting_group_id: group27
-    set_action:
-      - lambda: |-
-          id(pump_run_time_7) = x;
-
-  - platform: template
-    name: $pump_time 8
-    id: pump_time_slider_8
-    optimistic: true
-    restore_value: true
-    min_value: 1
-    max_value: $max_value_time
-    step: 1
-    unit_of_measurement: "s"
-    icon: mdi:timer-outline
-    web_server:
-      sorting_group_id: group28
-    set_action:
-      - lambda: |-
-          id(pump_run_time_8) = x;
-
   - platform: template
     name: $water_min 5
     id: set_moisture_slider_5

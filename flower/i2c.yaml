@@ -1,4 +1,5 @@
 i2c:
-  sda: GPIO32
-  scl: GPIO25
+  sda: GPIO21
+  scl: GPIO19
   scan: true
+  id: bus_a

@@ -24,7 +24,30 @@ web_server:
     - id: group8
       name: 🌺 $flower 8
       sorting_weight: 18
-
+    - id: group21
+      name: ⚙️🌸 $setting $flower 1
+      sorting_weight: 50
+    - id: group22
+      name: ⚙️🪴 $setting $flower 2
+      sorting_weight: 51
+    - id: group23
+      name: ⚙️🌻 $setting $flower 3
+      sorting_weight: 52
+    - id: group24
+      name: ⚙️🌺 $setting $flower 4
+      sorting_weight: 53
+    - id: group25
+      name: ⚙️🌸 $setting $flower 5
+      sorting_weight: 55
+    - id: group26
+      name: ⚙️🪴 $setting $flower 6
+      sorting_weight: 56
+    - id: group27
+      name: ⚙️🌻 $setting $flower 7
+      sorting_weight: 57
+    - id: group28
+      name: ⚙️🌺 $setting $flower 8
+      sorting_weight: 58
 
 
 time:

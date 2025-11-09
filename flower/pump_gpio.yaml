@@ -1,5 +1,5 @@
 substitutions:
-  # выводы к которым подключены помпы
+  max_value_time: 60
   gpio_relay1: GPIO16
   gpio_relay2: GPIO17
   gpio_relay3: GPIO26
@@ -42,7 +42,22 @@ globals:
     type: bool
     restore_value: true
     initial_value: "false"
-
+  - id: pump_run_time_1
+    type: int
+    restore_value: yes
+    initial_value: '10'
+  - id: pump_run_time_2
+    type: int
+    restore_value: yes
+    initial_value: '10'
+  - id: pump_run_time_3
+    type: int
+    restore_value: yes
+    initial_value: '10'
+  - id: pump_run_time_4
+    type: int
+    restore_value: yes
+    initial_value: '10'
 
 esphome:
   on_boot:
@@ -53,6 +68,12 @@ esphome:
           id(last_watering_sensor_2).publish_state(id(last_watering_zone2));
           id(last_watering_sensor_3).publish_state(id(last_watering_zone3));
           id(last_watering_sensor_4).publish_state(id(last_watering_zone4));
+
+          id(pump_time_slider_1).publish_state(id(pump_run_time_1));
+          id(pump_time_slider_2).publish_state(id(pump_run_time_2));
+          id(pump_time_slider_3).publish_state(id(pump_run_time_3));
+          id(pump_time_slider_4).publish_state(id(pump_run_time_4));
+
 script:
   - id: pump_on_zone_1
     then:
@@ -180,5 +201,73 @@ text_sensor:
     web_server:
       sorting_weight: 6
       sorting_group_id: group4
+
+number:
+  - platform: template
+    name: $pump_time 1
+    id: pump_time_slider_1
+    optimistic: true
+    restore_value: true
+    min_value: 1
+    max_value: $max_value_time
+    step: 1
+    unit_of_measurement: "s"
+    icon: mdi:timer-outline
+    web_server:
+      sorting_group_id: group21
+    set_action:
+      - lambda: |-
+          id(pump_run_time_1) = x;
+
+  - platform: template
+    name: $pump_time 2
+    id: pump_time_slider_2
+    optimistic: true
+    restore_value: true
+    min_value: 1
+    max_value: $max_value_time
+    step: 1
+    unit_of_measurement: "s"
+    icon: mdi:timer-outline
+    web_server:
+      sorting_group_id: group22
+    set_action:
+      - lambda: |-
+          id(pump_run_time_2) = x;
+
+  - platform: template
+    name: $pump_time 3
+    id: pump_time_slider_3
+    optimistic: true
+    restore_value: true
+    min_value: 1
+    max_value: $max_value_time
+    step: 1
+    unit_of_measurement: "s"
+    icon: mdi:timer-outline
+    web_server:
+      sorting_group_id: group23
+    set_action:
+      - lambda: |-
+          id(pump_run_time_3) = x;
+
+  - platform: template
+    name: $pump_time 4
+    id: pump_time_slider_4
+    optimistic: true
+    restore_value: true
+    min_value: 1
+    max_value: $max_value_time
+    step: 1
+    unit_of_measurement: "s"
+    icon: mdi:timer-outline
+    web_server:
+      sorting_group_id: group24
+    set_action:
+      - lambda: |-
+          id(pump_run_time_4) = x;
+
+
+
 
 

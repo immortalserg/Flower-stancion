@@ -1,10 +1,10 @@
 substitutions:
-  i2c_address_led: 0x20
+  i2c_address_led: 0x24
 
 pcf8574:
   - id: pcf8574_led
     address: $i2c_address_led
-    pcf8575: false
+
 
 switch:
   - platform: gpio

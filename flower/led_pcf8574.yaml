@@ -1,0 +1,142 @@
+substitutions:
+  i2c_address_led: 0x24
+  led_inverted: false
+
+pcf8574:
+  - id: pcf8574_led
+    address: $i2c_address_led
+
+
+switch:
+  - platform: gpio
+    id: led1
+#    name: led 1
+    pin:
+      pcf8574: pcf8574_led
+      number: 0
+      mode: OUTPUT
+      inverted: $led_inverted
+
+  - platform: gpio
+    id: led2
+#    name: led 2
+    pin:
+      pcf8574: pcf8574_led
+      number: 1
+      mode: OUTPUT
+      inverted: $led_inverted
+
+  - platform: gpio
+    id: led3
+#    name: led 3
+    pin:
+      pcf8574: pcf8574_led
+      number: 2
+      mode: OUTPUT
+      inverted: $led_inverted
+
+  - platform: gpio
+    id: led4
+#    name: led 4
+    pin:
+      pcf8574: pcf8574_led
+      number: 3
+      mode: OUTPUT
+      inverted: $led_inverted
+
+  - platform: gpio
+    id: led5
+#    name: led 5
+    pin:
+      pcf8574: pcf8574_led
+      number: 4
+      mode: OUTPUT
+      inverted: $led_inverted
+
+  - platform: gpio
+    id: led6
+#    name: led 6
+    pin:
+      pcf8574: pcf8574_led
+      number: 5
+      mode: OUTPUT
+      inverted: $led_inverted
+
+
+  - platform: gpio
+    id: led7
+#    name: led 7
+    pin:
+      pcf8574: pcf8574_led
+      number: 6
+      mode: OUTPUT
+      inverted: $led_inverted
+
+  - platform: gpio
+    id: led8
+#    name: led 8
+    pin:
+      pcf8574: pcf8574_led
+      number: 7
+      mode: OUTPUT
+      inverted: $led_inverted
+
+
+
+
+
+interval:
+  - interval: 500ms
+    then:
+      - lambda: |-
+          if (id(relay_1).state) {
+            id(led1).turn_on();
+          } else {
+            id(led1).turn_off();
+          }
+
+          if (id(relay_2).state) {
+            id(led2).turn_on();
+          } else {
+            id(led2).turn_off();
+          }
+
+          if (id(relay_3).state) {
+            id(led3).turn_on();
+          } else {
+            id(led3).turn_off();
+          }
+
+          if (id(relay_4).state) {
+            id(led4).turn_on();
+          } else {
+            id(led4).turn_off();
+          }
+
+          if (id(relay_5).state) {
+            id(led5).turn_on();
+          } else {
+            id(led5).turn_off();
+          }
+
+
+          if (id(relay_6).state) {
+            id(led6).turn_on();
+          } else {
+            id(led6).turn_off();
+          }
+
+
+          if (id(relay_7).state) {
+            id(led7).turn_on();
+          } else {
+            id(led7).turn_off();
+          }
+
+
+          if (id(relay_8).state) {
+            id(led8).turn_on();
+          } else {
+            id(led8).turn_off();
+          }
+

@@ -1,0 +1,97 @@
+binary_sensor:
+  - platform: gpio
+    pin:
+      pcf8574: pcf8574_buttons
+      number: 4
+      mode:
+        input: true
+      inverted: $button_inverted
+    id: button5
+    on_press:
+      - lambda: |-
+          if (id(button5_type_enable).state) {
+            id(pump_on_zone_5).execute();
+          } else {
+            id(relay_5).toggle();
+          }
+  - platform: gpio
+    pin:
+      pcf8574: pcf8574_buttons
+      number: 5
+      mode:
+        input: true
+      inverted: $button_inverted
+    id: button6
+    on_press:
+      - lambda: |-
+          if (id(button6_type_enable).state) {
+            id(pump_on_zone_6).execute();
+          } else {
+            id(relay_6).toggle();
+          }
+  - platform: gpio
+    pin:
+      pcf8574: pcf8574_buttons
+      number: 6
+      mode:
+        input: true
+      inverted: $button_inverted
+    id: button7
+    on_press:
+      - lambda: |-
+          if (id(button7_type_enable).state) {
+            id(pump_on_zone_7).execute();
+          } else {
+            id(relay_7).toggle();
+          }
+  - platform: gpio
+    pin:
+      pcf8574: pcf8574_buttons
+      number: 7
+      mode:
+        input: true
+      inverted: $button_inverted
+    id: button8
+    on_press:
+      - lambda: |-
+          if (id(button8_type_enable).state) {
+            id(pump_on_zone_8).execute();
+          } else {
+            id(relay_8).toggle();
+          }
+switch:
+  - platform: template
+    name: $button_type 5
+    id: button5_type_enable
+    icon: mdi:calendar-clock
+    web_server:
+      sorting_group_id: group25
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  - platform: template
+    name: $button_type 6
+    id: button6_type_enable
+    icon: mdi:calendar-clock
+    web_server:
+      sorting_group_id: group26
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  - platform: template
+    name: $button_type 7
+    id: button7_type_enable
+    icon: mdi:calendar-clock
+    web_server:
+      sorting_group_id: group27
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  - platform: template
+    name: $button_type 8
+    id: button8_type_enable
+    icon: mdi:calendar-clock
+    web_server:
+      sorting_group_id: group28
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF

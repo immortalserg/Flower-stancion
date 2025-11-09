@@ -41,6 +41,23 @@ globals:
     type: bool
     restore_value: true
     initial_value: "false"
+  - id: pump_run_time_5
+    type: int
+    restore_value: yes
+    initial_value: '10'
+  - id: pump_run_time_6
+    type: int
+    restore_value: yes
+    initial_value: '10'
+  - id: pump_run_time_7
+    type: int
+    restore_value: yes
+    initial_value: '10'
+  - id: pump_run_time_8
+    type: int
+    restore_value: yes
+    initial_value: '10'
+
 
 script:
   - id: pump_on_zone_5
@@ -196,4 +213,67 @@ text_sensor:
       sorting_weight: 6
       sorting_group_id: group8
 
+number:
+  - platform: template
+    name: $pump_time 5
+    id: pump_time_slider_5
+    optimistic: true
+    restore_value: true
+    min_value: 1
+    max_value: $max_value_time
+    step: 1
+    unit_of_measurement: "s"
+    icon: mdi:timer-outline
+    web_server:
+      sorting_group_id: group25
+    set_action:
+      - lambda: |-
+          id(pump_run_time_5) = x;
 
+  - platform: template
+    name: $pump_time 6
+    id: pump_time_slider_6
+    optimistic: true
+    restore_value: true
+    min_value: 1
+    max_value: $max_value_time
+    step: 1
+    unit_of_measurement: "s"
+    icon: mdi:timer-outline
+    web_server:
+      sorting_group_id: group26
+    set_action:
+      - lambda: |-
+          id(pump_run_time_6) = x;
+
+  - platform: template
+    name: $pump_time 7
+    id: pump_time_slider_7
+    optimistic: true
+    restore_value: true
+    min_value: 1
+    max_value: $max_value_time
+    step: 1
+    unit_of_measurement: "s"
+    icon: mdi:timer-outline
+    web_server:
+      sorting_group_id: group27
+    set_action:
+      - lambda: |-
+          id(pump_run_time_7) = x;
+
+  - platform: template
+    name: $pump_time 8
+    id: pump_time_slider_8
+    optimistic: true
+    restore_value: true
+    min_value: 1
+    max_value: $max_value_time
+    step: 1
+    unit_of_measurement: "s"
+    icon: mdi:timer-outline
+    web_server:
+      sorting_group_id: group28
+    set_action:
+      - lambda: |-
+          id(pump_run_time_8) = x;

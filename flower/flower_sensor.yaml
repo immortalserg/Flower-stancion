@@ -97,21 +97,6 @@ esphome:
           update_select(id(flower4_sensor_model), id(flower4_sensor_model_select));
 
 
-web_server:
-  sorting_groups:
-    - id: group21
-      name: "⚙️🌸 $setting $flower 1"
-      sorting_weight: 50
-    - id: group22
-      name: "⚙️🪴 $setting $flower 2"
-      sorting_weight: 51
-    - id: group23
-      name: "⚙️🌻 $setting $flower 3"
-      sorting_weight: 52
-    - id: group24
-      name: "⚙️🌺 $setting $flower 4"
-      sorting_weight: 53
-
 
 
 text:
